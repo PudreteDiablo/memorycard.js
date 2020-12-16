@@ -23,22 +23,25 @@ Save user progress in javascript-based games with slots and objects.
   - [Configuration](#configuration)
     - [Strict Mode](#strict-mode)
   - [Methods](#methods)
-    - [getSummary( )](#getsummary-)
-    - [getAll( )](#getall-)
-    - [getSlot( )](#getslot-)
     - [write( )](#write-)
     - [save( )](#save-)
     - [load( )](#load-)
+    - [copy( )](#copy-)
+    - [delete( )](#delete-)
+    - [getSummary( )](#getsummary-)
+    - [getAll( )](#getall-)
+    - [getSlot( )](#getslot-)
     - [writeAsync( )](#writeasync-)
     - [saveAsync( )](#saveasync-)
     - [loadAsync( )](#loadasync-)
+    - [copyAsync( )](#copyasync-)
+    - [deleteAsync( )](#deleteasync-)
     - [on( )](#on-)
   - [Events](#events)
   - [Properties](#properties)
-- [Other Stuff](#other-stuff)
-  - [Write vs. Save](#write-vs-save)
-  - [Automatic vs. Manual](#automatic-vs-manual-save)
-  - [Support](#support)
+- [Write vs. Save](#write-vs-save)
+- [Automatic vs. Manual](#automatic-vs-manual-save)
+- [Support](#support)
 
 # Installation
 #### Node.js (Electron/Backend-Servers)
@@ -189,6 +192,87 @@ Strict mode can be very useful, but just try to make the code cleanest possible,
 
 ## Methods
 
+### write( )
+Writes the data in a slot of the *MemoryCard*. This method will overwrite the entire slot if is already in use. If you only want to save a little change like new "coins" amount, you maybe want to use [save( )](#save) method instead.
+
+```js
+// MemoryCard.write( slot_index, title, data, ?key ) ;
+MemoryCard.write( 2, "Cookies Island", {
+ username : "Diablo Luna"
+ scene : 3 ,
+ inventory : {
+   watermelons : 8 ,
+   lemon_pie : true
+ }
+} , false, "XMJSKO92" ) ;
+```
+
+#### Parameters
+- `slot_index` Number | **(Required)** Declare the slot where the data will be saved.
+- `title` String | **Default: "Slot N" where N = slot_index + 1.** Set a title to display in the slots summary.
+- `data` Object | **(Required)** All data to save in the slot. If you have enabled **Strict Mode**, the data object will be processed before save it in the storage. See [Strict Mode](#strict-mode) for more information.
+- `key` String | **(Optional)** Set the required key to save the new data in the slot, only if you have declared it before in the [configuration](#configuration).
+
+
+### save( )
+With this method you can save one or more properties in an already saved slot. If the selected slot is empty, the method will return an error.
+
+Unlike [write( )](#write-), when you are in **strict mode**, only the defined properties in the parameters will be processed and fixed to save in the slot. 
+
+```js
+// MemoryCard.save( slot_index, data, ?key ) ;
+MemoryCard.save( 2, {
+ rupees : 32
+} , "XMJSKO92" ) ;
+```
+
+#### Parameters
+- `slot_index` Number | **(Required)** Declare the slot where the data will be saved.
+- `data` Object | **(Required)** The data to overwrite in the slot.
+- `key` String | **(Optional)** Set the required key to save the new data in the slot, only if you have declared it before in the [configuration](#configuration).
+
+
+### load( )
+Read and return the data of the specified slot_index. This method will return an error if the selected slot is empty.
+
+```js
+// MemoryCard.load( slot_index ) ;
+MemoryCard.load( 2 ) ;
+```
+
+#### Parameters
+- `slot_index` Number | **(Required)** Declare the slot where the data will loaded.
+
+
+### copy( )
+Copy a already used slot to create new one.
+
+```js
+// MemoryCard.copy( ref_index, dest_index ) ;
+MemoryCard.load( 0, 2 ) ;
+// Slot 1 will be copied in Slot 3 [^]
+```
+
+#### Parameters
+- `ref_index` Number | **(Required)** The index of the slot that will be copied.
+- `dest_index` Number | **(Required)** The index of destination slot.
+
+
+### delete( )
+Delete an already used slot and restore it as *empty slot*.
+
+```js
+// MemoryCard.delete( slot_index ) ;
+MemoryCard.delete( 1 ) ;
+```
+
+#### Parameters
+- `slot_index` Number | **(Required)** The index of the slot that you want to delete. 
+
+#### Recomendation
+Ask to the player if is sure to delete the selected slot by writing in the dialog box the title of the slot.
+
+
 ### getSummary( )
 Returns an array of all slots in the *MemoryCard* even the empty slots. Is just a summary that helps you to draw a "save screen", so It only will returns relevant information like slot_index and the modification date.
 
@@ -250,56 +334,20 @@ var slot = MemoryCard.getSlot( 0 ) ;
 #### Parameters
 - `slot_index` Number - **(Required)** The index of the requested slot. Must be less than the pre-configured number of slots (4 slots by default).
 
-### write( )
-Writes the data in a slot of the *MemoryCard*. This method will overwrite the entire slot if is already in use. If you only want to save a little change like new "coins" amount, you maybe want to use [save( )](#save) method instead.
+
+### on( )
+Adds an event listener depending of the type defined as first parameter. See [Events](#evets) to check available events.
 
 ```js
-// MemoryCard.write( slot_index, title, data, ?key ) ;
-MemoryCard.write( 2, "Cookies Island", {
- username : "Diablo Luna"
- scene : 3 ,
- inventory : {
-   watermelons : 8 ,
-   lemon_pie : true
- }
-} , false, "XMJSKO92" ) ;
+// MemoryCard.on( eventType, callback ) ;
+MemoryCard.on( 'save', ( ev ) => {
+  console.log( ev.slot_index ) ; // 0
+} ) ;
 ```
 
 #### Parameters
-- `slot_index` Number | **(Required)** Declare the slot where the data will be saved.
-- `title` String | **Default: "Slot N" where N = slot_index + 1.** Set a title to display in the slots summary.
-- `data` Object | **(Required)** All data to save in the slot. If you have enabled **Strict Mode**, the data object will be processed before save it in the storage. See [Strict Mode](#strict-mode) for more information.
-- `key` String | **(Optional)** Set the required key to save the new data in the slot, only if you have declared it before in the [configuration](#configuration).
-
-
-### save( )
-With this method you can save one or more properties in an already saved slot. If the selected slot is empty, the method will return an error.
-
-Unlike [write( )](#write-), when you are in **strict mode**, only the defined properties in the parameters will be processed and fixed to save in the slot. 
-
-```js
-// MemoryCard.save( slot_index, data, ?key ) ;
-MemoryCard.save( 2, {
- rupees : 32
-} , "XMJSKO92" ) ;
-```
-
-#### Parameters
-- `slot_index` Number | **(Required)** Declare the slot where the data will be saved.
-- `data` Object | **(Required)** The data to overwrite in the slot.
-- `key` String | **(Optional)** Set the required key to save the new data in the slot, only if you have declared it before in the [configuration](#configuration).
-
-
-### load( )
-Read and return the data of the specified slot_index. This method will return an error if the selected slot is empty.
-
-```js
-// MemoryCard.load( slot_index ) ;
-MemoryCard.load( 2 ) ;
-```
-
-#### Parameters
-- `slot_index` Number | **(Required)** Declare the slot where the data will loaded.
+- `eventType` String | **(Required)** The type of the event to wait.
+- `callback` Function | **(Required)** The function that will be called everytime event fires.
 
 
 ### writeAsync( )
@@ -325,6 +373,21 @@ MemoryCard.saveAsync( slot_index, data, ?key ) ;
 MemoryCard.loadAsync( slot_index ) ;
 ```
 
+
+### copyAsync( )
+
+```js
+MemoryCard.copyAsync( ref_index, dest_index ) ;
+```
+
+
+### deleteAsync( )
+
+```js
+MemoryCard.deleteAsync( slot_index ) ;
+```
+
+
 #### An example of an async function call
 
 ```js
@@ -346,7 +409,50 @@ MemoryCard
   } ) ;
 ```
 
-# Other Stuff
+
+## Events
+Catchable events through [on( )](#on-) method.
+
+### Event: `save`
+Called when [write( )](#write-) or [save( )](#save-) has been executed correctly. 
+
+Returns:
+- `EventData` Object
+  - `type` String | If you want to differentiate between `write` and `save` methods.
+  - `slot_index` Number | The index of the modified slot. 
+  - `slot_data` Object | All data saved in the slot.
+
+### Event: `load`
+Fired when [load( )](#load-) has been executed correctly. 
+
+Returns:
+- `EventData` Object
+  - `slot_index` Number | The index of the modified slot. 
+  - `slot_data` Object | All data saved in the slot.
+
+### Event: `delete`
+Fired when [delete( )](#delete-) has been executed correctly. 
+
+Returns:
+- `EventData` Object
+  - `slot_index` Number | The index of the modified slot. 
+
+### Event: `copy`
+Fired when [copy( )](#copy-) has been executed correctly. 
+
+Returns:
+- `EventData` Object
+  - `slot_index` Number | The index of the new slot. 
+  - `slot_ref_index` Number | The index of the copied slot.
+
+
+## Properties
+Properties of the *MemoryCard* Object. I think are useless (because I used it to develop the methods) but... here it is.
+
+`MemoryCard.__config` Object | The object config used every time a method is called and requires it. This object is modified with the [config( )](#configuration) method.
+
+`MemoryCard.__cache` Object | To avoid a slow perfomance, all slots are stored in a cache object and it is modified in every method. For example, when you call [write( )](#write-), the slot inside the cache object also will be modified to be available for other methods like [load( )](#load-) or the same write( ) because we need to compare the `old slot data` with the `new slot data`.
+
 
 ## write() vs. save()
 Maybe you think that save is useless because only allows to save in already saved slots. But this method was designed to add a safe option to avoid a constant original slot overwrite. Also, save( ) can be much faster and can help to make a *automatic-save* system.
