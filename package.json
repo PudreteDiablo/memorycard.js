@@ -11,8 +11,12 @@
     "url": "git+https://github.com/PudreteDiablo/memorycard-js.git"
   },
   "keywords": [
-    "game",
-    "development"
+    "games",
+    "development",
+    "storage",
+    "phaser.io",
+    "electron",
+    "web"
   ],
   "author": "Diablo Luna <diablorodriguez99@gmail.com>",
   "license": "ISC",
