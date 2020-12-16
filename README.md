@@ -205,7 +205,7 @@ var $new = {
 ```
 
 Strict mode can be very useful, but just try to make the code cleanest possible, is not a magic tool.
-
+<br/><br/>
 
 ## Methods
 
@@ -347,7 +347,7 @@ MemoryCard
 <br/><br/>
 
 ### decryptCardData( )
-Returns a JSON object of the *MemoryCard* data defined as parameter.
+(Node.js Only) Returns a JSON object of the *MemoryCard* data defined as parameter.
 
 ```js
 MemoryCard.decryptCardData( encrypted_data ) ;
@@ -358,7 +358,7 @@ MemoryCard.decryptCardData( encrypted_data ) ;
 <br/><br/>
 
 ### decryptCardFile( )
-Same as [decryptCardData( )](#decryptcarddata-) but this method seek the file directly in the provided path.
+(Node.js Only) Same as [decryptCardData( )](#decryptcarddata-) but this method seek the file directly in the provided path.
 
 ```js
 MemoryCard.getCardData( memoryCardFile_Path ) ;
@@ -564,7 +564,7 @@ Returns:
 - `EventData` Object
   - `slot_index` Number | The index of the new slot. 
   - `slot_ref_index` Number | The index of the copied slot.
-<br/><br/>
+<br/><br/><br/>
 
 
 
@@ -579,12 +579,14 @@ Properties of the *MemoryCard* Object. I think are useless (because I used it to
 ## write() vs. save()
 Maybe you think that save is useless because only allows to save in already saved slots. But this method was designed to add a safe option to avoid a constant original slot overwrite. Also, save( ) can be much faster and can help to make a *automatic-save* system.
 <br/><br/>
+
 ## Automatic vs. Manual Save
 **Note:** I refer to *manual saving* as the save activated by the player through a menu or an in-game item.
 
 This depends totally about your game and the genre of it. Just imagine, a FPS horror game where you need to save a property named `scene` every time the player changes the scene, but at the same time needs a *manual save* to keep all big changes in the storage like the chapter number or all new added items in to the inventory.
 
 Of course, you can save all changes every time the player changes the scene, but it could affect performance. As I said before, it depends of your game and your imagination.
+<br/><br/>
 
 ## How to Set Up a Cloud-Save System
 
