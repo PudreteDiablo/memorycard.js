@@ -560,7 +560,7 @@ Properties of the *MemoryCard* Object. I think are useless (except for the first
 <br/><br/>
 
 ## write() vs. save()
-Maybe you think that save is useless because only allows to save in already saved slots. But this method was designed to add a safe option to avoid a constant original slot overwrite. Also, save( ) can be much faster and can help to make a *automatic-save* system.
+Maybe you think that save is useless because only allows to save in already saved slots. But this method was designed to add a safe option to avoid a constant original slot overwrite. Also, save( ) can be much faster and can help to make an *automatic-save* system.
 <br/><br/>
 
 ## Automatic vs. Manual Save
