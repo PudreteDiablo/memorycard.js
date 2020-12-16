@@ -23,7 +23,8 @@ MCARD.__config = {
   file    : './memorycard.data' ,
   storage : isElectron( ) === true ? { } : window.localStorage ,
   key     : null ,
-  temp    : false
+  temp    : false ,
+  manual  : false
 } ;
 
 MCARD.__cache = { } ;

@@ -119,6 +119,7 @@ MemoryCard.config( config_object ) ;
   - `strict_mode` Boolean - **Default: false** | Set strict mode enabled. See [Strict Mode](#strict-mode) section for more information.
   - `template` Object - **Default: null** | Set a template for every new slot writed in the *MemoryCard*. When **strict_mode is disabled** all missing properties in the new slot will be replaced with the template properties as default. But if **strict_mode is enabled** all new slots must match with the template even the properties types to allow the save action.
   - `temp` Boolean - **Default: false** | **Recommended for cloud-based storage.** This option allows to create temporary *MemoryCard* files that will be deleted automatically by the OS or Browser by setting `/tmp/random-filename.data` in Node.js and switching **LocalStorage** to **SessionStorage** in Browsers.
+  - `manual` Boolean - **Default: false** | Prevents user to save or load until you manually load a *MemoryCard* data through [setCardData( )](#setcarddata-)
 
 #### Why set a *slots* limit?
 It just helps to organize the data and avoids a huge *disk usage* (Web-LocalStorage only support 5MB per website). Also, a small number of slots can help to create a nice "save screen" for your game, just like many retro games. 
@@ -577,7 +578,7 @@ Of course, you can save all changes every time the player changes the scene, but
 First, ensure to enable `temp` option in the [configuration](#configuration) 
 unless if you don't have problem if the player keep a *MemoryCard* data file in the disk drive (couldn't be a problem, 'cause you will set a custom file every time the game starts).
 
-**Tip:** Ensure to first load the *MemoryCard* data before enable save options in your game or all saved data will be saved in other *MemoryCard* file (lost data).
+**Tip:** Ensure to first load the *MemoryCard* data before enable save/load options in your game because, once the user access to the current MemoryCard, you will not able to change it.
 
 **Note:** You must write all new data in your server or cloud-storage manually. It can be easily set up with the [Save Event](#events) and the [getCardData( )](#getcarddata-).
 
