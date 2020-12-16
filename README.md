@@ -38,6 +38,7 @@ Save user progress in javascript-based games with slots and objects.
 - [Other Stuff](#other-stuff)
   - [Write vs. Save](#write-vs-save)
   - [Automatic vs. Manual](#automatic-vs-manual-save)
+  - [Support](#support)
 
 # Installation
 #### Node.js (Electron/Backend-Servers)
@@ -356,3 +357,6 @@ Maybe you think that save is useless because only allows to save in already save
 This depends totally about your game and the genre of it. Just imagine, a FPS horror game where you need to save a property named `scene` every time the player changes the scene, but at the same time needs a *manual save* to keep all big changes in the storage like the chapter number or all new added items in to the inventory.
 
 Of course, you can save all changes every time the player changes the scene, but it could affect performance. As I said before, it depends of your game and your imagination.
+
+## Support
+Support this project and other game-development tools through [Patreon](https://patreon.com/PudreteDiablo) or [Itch.io](https://pudretediablo.itch.io/)
