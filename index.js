@@ -1,3 +1,5 @@
+const { electron } = require('process');
+
 /* 
   Copyright 2021 Diablo Luna [@PudreteDiablo]
   Permission to use, copy, modify, and/or distribute this software for any purpose with or without fee is hereby granted, provided that the above copyright notice and this permission notice appear in all copies.
@@ -6,12 +8,19 @@
 var root       = typeof window !== "undefined" ? window : this ;
 var MCARD      = { } ;
 var isElectron = ( ) => typeof window !== "undefined" && window.process && window.process.platform ? true : false ;
+var isNodejs   = ( ) => typeof module !== 'undefined' && module.exports ? true : false ;
 var isCordova  = ( ) => typeof window !== "undefined" && window.hasOwnProperty( 'cordova' ) ? true : false ;
+var fs         = isNodejs( ) || isElectron( ) ? require( 'fs' ) : { } ;
+var path       = isNodejs( ) || isElectron( ) ? require( 'path' ) : { } ;
+var Cryptr     = isNodejs( ) || isElectron( ) ? require( 'cryptr' ) : null ;
+var cryptr     = Cryptr ? new Cryptr( 'WATERMELON-CIGARETTES' ) : { } ;
 
 MCARD.__config = {
-  slots : 4 ,
-  file  : './memorycard.data' ,
-  key   : null
+  slots   : 4 , 
+  file    : './memorycard.data' ,
+  storage : isElectron( ) === true ? { } : window.localStorage ,
+  key     : null ,
+  temp    : false
 } ;
 
 MCARD.__cache = { } ;
@@ -49,6 +58,15 @@ MCARD.config = ( object ) => {
     { throw new Error( 'Your declared template doesn\'t have properties. You will always get a error at save( ) function call.' ) ; }
   if( object.slots && typeof object.slots !== "number" ) 
     { throw new Error( 'slots property must be a number.' ) ; }
+  if( object.temp === true ) { 
+    if( isElectron( ) ) {
+      var OS   = require( 'os' ) ;
+      var tmp  = tmp = OS.tmpdir( ) ;
+      object.file = path.join( tmp, `./${ GET_RANDOM_STRING( 64 ).toUpperCase( ) }.data` ) ;
+    } else {
+      object.storage = window.sessionStorage ;
+    }
+  } /* SET TEMP FILE [^] */
   for( var i in object ) {
     MCARD.__config[ i ] = object[ i ] ;
   } return true ;
@@ -78,7 +96,12 @@ MCARD.config = ( object ) => {
  * ```
  */
 MCARD.getSummary = ( ) => {
-
+  var length = MCARD.__config.slots || 4 ;
+  var slots  = [ ] ;
+  for( var i = 0 ; i < length ; i++ ) {
+    slots.push( MCARD.getSlot( i ) ) ;
+    delete slots[ i ].data ;
+  } return slots ;
 } ;
 
 /**
@@ -86,7 +109,11 @@ MCARD.getSummary = ( ) => {
  * @abstract
  */
 MCARD.getAll = ( ) => {
-
+  var length = MCARD.__config.slots || 4 ;
+  var slots  = [ ] ;
+  for( var i = 0 ; i < length ; i++ ) {
+    slots.push( MCARD.getSlot( i ) ) ;
+  } return slots ;
 } ;
 
 /**
@@ -111,10 +138,44 @@ MCARD.getAll = ( ) => {
  * ```
  */
 MCARD.getSlot = ( index ) => {
+  var $s = MCARD.__config.slots || 4 ;
+  if( index >= $s ) 
+    { throw new Error( 'The defined index number is invalid. Must be less than the pre-configured MemoryCard.slots (' + $s + ')' ) ; }
   var i = index ; index = `slot-${ i }` ;
   if( MCARD.__cache[ index ] ) { return MCARD.__cache[ index ] ; }
-
+  expiresDate = expiresDate.toUTCString( ) ;
 }
+
+/**
+ * Reads directly from MemoryCard file. Not recommended, could affect to game performance if you use it frecuently.
+ *
+ * @return {Object} - all decrypted data of the file (slots).
+ */
+MCARD.read = ( ) => {
+  var data   = [ ] ;
+  var length = MCARD.__config.slots || 4 ;
+  var file   = MCARD.__config.file || './memorycard.data' ;
+  if( isElectron( ) ) {
+    if( fs.existsSync( file ) ) {
+      var raw = fs.readFileSync( file, 'utf8' ) ;
+      var str ;
+      try { str = cryptr.decrypt( raw ) ; }
+      catch( ex ) { throw new Error( 'Couldn\'t decrypt MemoryCard file. ' + ex.toString( ) ) ; }  
+      data = JSON.parse( str ) ;
+    } /* READ FILE IN DRIVE [^] */
+  } else {
+    for( var i = 0 ; i < length ; i++ ) {
+      let $sl = MCARD.__config.slots.storage.getItem( `memorycard-slot-${ i + 1 }` ) ,
+          str = !$sl ? null : typeof $sl === "string" && typeof window.btoa === "function" ? btoa( $sl ) : $sl ,
+          obj = str === null ? null : JSON.parse( str ) ;
+      data.push( obj ) ;
+    }
+  } /* clean */
+  for( var i = 0 ; i < length ; i++ ) {
+
+  } /* ===== */
+  return data ;
+} ;
 
 /**
  * This method will overwrite the entire slot if the slot is already in use. If you only want to save a little change like "coins" collected, you maybe want to use save( ) method instead. See docs, "Write vs Save" for more useful information.
@@ -141,6 +202,22 @@ MCARD.write = ( slot, title, data, key ) => {
   if( typeof title === "object" ) { data = title ; title = `Slot ${ slot }` ; }
   if( typeof data  !== "object" ) { throw new Error( 'No data defined to save. Please set a object to write the data_slot in the memorycard.' ) ; }
   
+} ;
+
+MCARD.read = ( ) => {
+
+} ;
+
+
+
+/* FUNCTIONS [v] */
+function GET_RANDOM_STRING( length ) {
+  var result           = '' ,
+     characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789' ,
+     charactersLength = characters.length ;
+  for ( var i = 0 ; i < length ; i++ ) {
+    result += characters.charAt( Math.floor( Math.random( ) * charactersLength ) ) ;
+  } return result ;
 }
 
 /* define module [v] === */

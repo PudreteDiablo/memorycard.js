@@ -26,14 +26,21 @@ Save user progress in javascript-based games with slots and objects.
     - [write( )](#write-)
     - [save( )](#save-)
     - [load( )](#load-)
+    - [read( )](#read-)
     - [copy( )](#copy-)
     - [delete( )](#delete-)
+    - [getCardData( )](#getcarddata-)
+    - [setCardData( )](#setcarddata-)
+    - [http( )](#http-)
+    - [decryptCardData( )](#decryptcarddata-)
+    - [decryptCardFile( )](#decryptcardfile-)
     - [getSummary( )](#getsummary-)
     - [getAll( )](#getall-)
     - [getSlot( )](#getslot-)
     - [writeAsync( )](#writeasync-)
     - [saveAsync( )](#saveasync-)
     - [loadAsync( )](#loadasync-)
+    - [readAsync( )](#readasync-)
     - [copyAsync( )](#copyasync-)
     - [deleteAsync( )](#deleteasync-)
     - [on( )](#on-)
@@ -41,6 +48,11 @@ Save user progress in javascript-based games with slots and objects.
   - [Properties](#properties)
 - [Write vs. Save](#write-vs-save)
 - [Automatic vs. Manual](#automatic-vs-manual-save)
+- [How to Set Up a Cloud-Save System](#how-to-set-a-cloud-save-system)
+  - [Client Side](#client-side)
+    - [No-HTTP](#no-http-manually)
+    - [HTTP](#http-automatic)
+  - [Server Side (Recommended)](#server-side)
 - [Support](#support)
 
 # Installation
@@ -59,6 +71,7 @@ Go to [dist folder](https://github.com/PudreteDiablo/memorycard-js/tree/master/d
 
 ### Advantages
 You can save time in your game development by installing this package in your current game. Don't worry about platforms compatibility or organization, With this tool you can easily access to a safe *user-progress* data storage.
+<br/><br/>
 
 # Available Platforms
 This tool was designed to be compatible with all useful javascript frameworks such as Electron and Cordova. Basically, the package encrypts the *data* and then saves depending on the platform where the game or application is currently running.
@@ -68,6 +81,8 @@ This tool was designed to be compatible with all useful javascript frameworks su
 | OS Drive         | LocalStorage | LocalStorage | Encrypted Data |
 
 If you want to save the data in a *cloud storage*, you can easily request the encrypted data instead of save it by installing memorycard-js in you server (safer) or in the client-side. Also you can use [Strict Mode](#strict-mode) and [Card Key](#card-key) to improve the security.
+
+**Electron Tip:** Don't forget to enable [nodeIntegration](https://www.electronjs.org/docs/tutorial/quick-start#create-the-main-script-file) or you will get a error saying something like: "require" is not a function.
 
 # Documentation
 
@@ -89,6 +104,7 @@ var mcard = window.MCARD ;
 MemoryCard.write( ) ;
 MCARD.load( ) ;
 ```
+<br/><br/>
 
 ## Configuration
 The configuration is optional, but helps you to have more control about your *MemoryCard* use flow. Once you have the reference of the *MemoryCard Object*, just call the **config( )** method to set your preferences. The configuration is adaptative, so you can change the config while the game/app is running even if the current *MemoryCard Slots* was saved with different configuration. **It could be helpful but also dangerous, so be careful.**
@@ -104,9 +120,10 @@ MemoryCard.config( config_object ) ;
   - `key` String - **Default: null** | Increase security by requesting a key everytime that write( ) or save( ) function is called.
   - `strict_mode` Boolean - **Default: false** | Set strict mode enabled. See [Strict Mode](#strict-mode) section for more information.
   - `template` Object - **Default: null** | Set a template for every new slot writed in the *MemoryCard*. When **strict_mode is disabled** all missing properties in the new slot will be replaced with the template properties as default. But if **strict_mode is enabled** all new slots must match with the template even the properties types to allow the save action.
+  - `temp` Boolean - **Default: false** | **Recommended for cloud-based storage.** This option allows to create temporary *MemoryCard* files that will be deleted automatically by the OS or Browser by setting `/tmp/random-filename.data` in Node.js and switching **LocalStorage** to **SessionStorage** in Browsers.
 
 #### Why set a *slots* limit?
-It just helps to organize the data and avoids a huge *disk usage*. Also, a small number of slots can help to create a nice "save screen" for your game, just like many retro games. 
+It just helps to organize the data and avoids a huge *disk usage* (Web-LocalStorage only support 5MB per website). Also, a small number of slots can help to create a nice "save screen" for your game, just like many retro games. 
 
 #### Strict Mode
 The strict mode helps you to keep your saved slots as clean as possible, so it will add missing properties, delete extra-defined properties and fixing the types. This mode can be useful to avoid corrupted data slots, but also could be dangerous, so just try to be careful.
@@ -212,7 +229,7 @@ MemoryCard.write( 2, "Cookies Island", {
 - `title` String | **Default: "Slot N" where N = slot_index + 1.** Set a title to display in the slots summary.
 - `data` Object | **(Required)** All data to save in the slot. If you have enabled **Strict Mode**, the data object will be processed before save it in the storage. See [Strict Mode](#strict-mode) for more information.
 - `key` String | **(Optional)** Set the required key to save the new data in the slot, only if you have declared it before in the [configuration](#configuration).
-
+<br/><br/>
 
 ### save( )
 With this method you can save one or more properties in an already saved slot. If the selected slot is empty, the method will return an error.
@@ -230,7 +247,7 @@ MemoryCard.save( 2, {
 - `slot_index` Number | **(Required)** Declare the slot where the data will be saved.
 - `data` Object | **(Required)** The data to overwrite in the slot.
 - `key` String | **(Optional)** Set the required key to save the new data in the slot, only if you have declared it before in the [configuration](#configuration).
-
+<br/><br/>
 
 ### load( )
 Read and return the data of the specified slot_index. This method will return an error if the selected slot is empty.
@@ -242,6 +259,15 @@ MemoryCard.load( 2 ) ;
 
 #### Parameters
 - `slot_index` Number | **(Required)** Declare the slot where the data will loaded.
+<br/><br/>
+
+### read( )
+Read directly from *MemoryCard* file and returns all data on the file as JSON Object. Also all cache object will be refreshed (not recommended).
+
+```js
+slots = MemoryCard.read( ) ;
+```
+<br/>
 
 
 ### copy( )
@@ -256,6 +282,7 @@ MemoryCard.load( 0, 2 ) ;
 #### Parameters
 - `ref_index` Number | **(Required)** The index of the slot that will be copied.
 - `dest_index` Number | **(Required)** The index of destination slot.
+<br/><br/>
 
 
 ### delete( )
@@ -271,7 +298,75 @@ MemoryCard.delete( 1 ) ;
 
 #### Recomendation
 Ask to the player if is sure to delete the selected slot by writing in the dialog box the title of the slot.
+<br/><br/>
 
+
+### getCardData( )
+Returns an encrypted *MemoryCard* data to save in an external drive like a cloud-storage.
+
+```js
+MemoryCard.getCardData( ) ;
+```
+<br/>
+
+
+### setCardData( )
+Set custom encrypted *MemoryCard* data to load slots and *user-progress*. You can use this method to load a *MemoryCard* backup or data requested from a cloud-storage.
+
+If you will use a full "cloud-save-system", **I recommend to enable the `temp` option in the [MemoryCard Configuration](#configuration).** This will allow to delete automatically the *MemoryCard* files by setting `/tmp` folder as *MemoryCard* file or switching LocalStorage to SessionStorage if you will use a Browser instead Node.js as platform.
+
+```js
+MemoryCard.setCardData( MemoryCard_Data ) ;
+```
+
+#### Parameters
+- `MemoryCard_Data` String | **(Required)** A valid encrypted string that contains all *MemoryCard* data. 
+<br/><br/>
+
+
+### http( )
+Loads file from the defined url and then tries to load it as *MemoryCard* data through [setCardData( )](#setcarddata-).
+
+**Returns a Promise.**
+
+```js
+MemoryCard
+  .http( url )
+  .then( ( ) => {
+    // CLOUD-MEMORYCARD LOADED SUCCESSFULLY
+    // READY TO GET SLOTS DATA
+  } )
+  .catch( err => {
+    // ERROR
+    console.error( 'MEMORYCARD_CLOUD_LOAD_ERROR ::', err ) ;
+  } ) ;
+```
+
+#### Parameters
+- `url` URL | **(Required)** A valid url that returns an encrypted *MemoryCard* data obtained through [getCardData( )](#getcarddata-)
+<br/><br/>
+
+### decryptCardData( )
+Returns a JSON object of the *MemoryCard* data defined as parameter.
+
+```js
+MemoryCard.decryptCardData( encrypted_data ) ;
+```
+
+#### Parameters
+- `encrypted_data` String | **(Required)** A valid encrypted *MemoryCard* data obtained through [getCardData( )](#getcarddata-)
+<br/><br/>
+
+### decryptCardFile( )
+Same as [decryptCardData( )](#decryptcarddata-) but this method seek the file directly in the provided path.
+
+```js
+MemoryCard.getCardData( memoryCardFile_Path ) ;
+```
+
+#### Parameters
+- `memoryCardFile_Path` String | **(Required)** A valid path of encrypted *MemoryCard* data file.
+<br/><br/>
 
 ### getSummary( )
 Returns an array of all slots in the *MemoryCard* even the empty slots. Is just a summary that helps you to draw a "save screen", so It only will returns relevant information like slot_index and the modification date.
@@ -293,6 +388,8 @@ var slots = MemoryCard.getSummary( ) ;
       title : "Slot 3"
     } ] ;
 ```
+<br/>
+
 
 ### getAll( )
 Same as getSummary( ) but this method also includes data of every slot. Maybe you want to add more info. to your "save screen" such as rupees collected or the game progress.
@@ -314,6 +411,8 @@ var slots = MemoryCard.getSummary( ) ;
       data  : null
     } ]
 ```
+<br/>
+
 
 ### getSlot( )
 Returns all slot data of the specified *slot_index*. If the slot is empty it will returns an object with `empty : true` property.
@@ -333,6 +432,7 @@ var slot = MemoryCard.getSlot( 0 ) ;
 
 #### Parameters
 - `slot_index` Number - **(Required)** The index of the requested slot. Must be less than the pre-configured number of slots (4 slots by default).
+<br/>
 
 
 ### on( )
@@ -348,6 +448,7 @@ MemoryCard.on( 'save', ( ev ) => {
 #### Parameters
 - `eventType` String | **(Required)** The type of the event to wait.
 - `callback` Function | **(Required)** The function that will be called everytime event fires.
+<br/>
 
 
 ### writeAsync( )
@@ -358,6 +459,7 @@ An async option of [write( )](#write-]).
 ```js
 MemoryCard.writeAsync( slot_index, title, data, ?key ) ;
 ```
+<br/>
 
 
 ### saveAsync( )
@@ -365,6 +467,7 @@ MemoryCard.writeAsync( slot_index, title, data, ?key ) ;
 ```js
 MemoryCard.saveAsync( slot_index, data, ?key ) ;
 ```
+<br/>
 
 
 ### loadAsync( )
@@ -372,6 +475,15 @@ MemoryCard.saveAsync( slot_index, data, ?key ) ;
 ```js
 MemoryCard.loadAsync( slot_index ) ;
 ```
+<br/>
+
+
+### readAsync( )
+
+```js
+MemoryCard.readAsync( ) ;
+```
+<br/>
 
 
 ### copyAsync( )
@@ -379,6 +491,7 @@ MemoryCard.loadAsync( slot_index ) ;
 ```js
 MemoryCard.copyAsync( ref_index, dest_index ) ;
 ```
+<br/>
 
 
 ### deleteAsync( )
@@ -400,14 +513,15 @@ MemoryCard
       lemon_pie : true
     }
   } , false, "XMJSKO92" ).
-  .then( ( ) => {
+  .then( function( returned_variable_if_original_method_returns_one ) {
     // ON SUCCESS
   } )
-  .catch( err => {
+  .catch( function( err ) {
     // ON ERROR
     console.error( 'WRITE_SLOT_DATA_ERROR ::', err ) ;
   } ) ;
 ```
+<br/><br/>
 
 
 ## Events
@@ -421,6 +535,8 @@ Returns:
   - `type` String | If you want to differentiate between `write` and `save` methods.
   - `slot_index` Number | The index of the modified slot. 
   - `slot_data` Object | All data saved in the slot.
+<br/><br/>
+
 
 ### Event: `load`
 Fired when [load( )](#load-) has been executed correctly. 
@@ -429,6 +545,8 @@ Returns:
 - `EventData` Object
   - `slot_index` Number | The index of the modified slot. 
   - `slot_data` Object | All data saved in the slot.
+<br/><br/>
+
 
 ### Event: `delete`
 Fired when [delete( )](#delete-) has been executed correctly. 
@@ -436,6 +554,8 @@ Fired when [delete( )](#delete-) has been executed correctly.
 Returns:
 - `EventData` Object
   - `slot_index` Number | The index of the modified slot. 
+<br/><br/>
+
 
 ### Event: `copy`
 Fired when [copy( )](#copy-) has been executed correctly. 
@@ -444,25 +564,65 @@ Returns:
 - `EventData` Object
   - `slot_index` Number | The index of the new slot. 
   - `slot_ref_index` Number | The index of the copied slot.
+<br/><br/>
+
 
 
 ## Properties
 Properties of the *MemoryCard* Object. I think are useless (because I used it to develop the methods) but... here it is.
 
-`MemoryCard.__config` Object | The object config used every time a method is called and requires it. This object is modified with the [config( )](#configuration) method.
+`MemoryCard.__config` Object | The object config used every time a method is called and requires it. This object is modified with the [config( )](#configuration) method. **I recommend to you this property as read-only.** Please modify any .__config property by [config( )](#configuration) method.
 
 `MemoryCard.__cache` Object | To avoid a slow perfomance, all slots are stored in a cache object and it is modified in every method. For example, when you call [write( )](#write-), the slot inside the cache object also will be modified to be available for other methods like [load( )](#load-) or the same write( ) because we need to compare the `old slot data` with the `new slot data`.
-
+<br/><br/>
 
 ## write() vs. save()
 Maybe you think that save is useless because only allows to save in already saved slots. But this method was designed to add a safe option to avoid a constant original slot overwrite. Also, save( ) can be much faster and can help to make a *automatic-save* system.
-
+<br/><br/>
 ## Automatic vs. Manual Save
 **Note:** I refer to *manual saving* as the save activated by the player through a menu or an in-game item.
 
 This depends totally about your game and the genre of it. Just imagine, a FPS horror game where you need to save a property named `scene` every time the player changes the scene, but at the same time needs a *manual save* to keep all big changes in the storage like the chapter number or all new added items in to the inventory.
 
 Of course, you can save all changes every time the player changes the scene, but it could affect performance. As I said before, it depends of your game and your imagination.
+
+## How to Set Up a Cloud-Save System
+
+### Client Side
+First, ensure to enable `temp` option in the [configuration](#configuration) 
+unless you don't have problem if the player keep a *MemoryCard* data file in the disk drive (couldn't be a problem, 'cause you will set a custom file every time the game starts).
+
+**Tip:** Ensure to first load the *MemoryCard* data before enable save options in your game or all saved data will be saved in other *MemoryCard* file (lost data).
+
+**Note:** You must write all new data in your server or cloud-storage manually. It can be easily set up with the [Save Event](#events) and the [getCardData( )](#getcarddata-).
+
+#### No-HTTP (Manually)
+You must download your *MemoryCard* data from your server by yourself. Once you have the data loaded, call the [setCardData( )](#setcarddata-) method to set the previously saved data from [getCardData( )](#getcarddata-) as your current *MemoryCard* data.
+
+#### HTTP (Automatic)
+You can save time if you provide a URL to directly get *MemoryCard* data from your server or cloud-storage.
+<br/><br/>
+### Server Side
+Client side option for cloud-save system can be problematic if you are not a experienced javascript programmer. You can perfectly let server do all work and just provide a final JSON objecto to the client through HTTP.
+
+#### Here an example with express.js
+```js
+const express = require( 'express' ) ;
+const memory  = require( 'memorycard-js' ) ;
+const app     = express( ) ;
+const port    = 3000 ;
+const fs      = require( 'fs' ) ;
+
+app.get( '/getUserMemoryCard*', ( req, res ) => {
+  var user_id = req.query.id ;
+
+} ) ;
+
+app.listen( port, ( ) => {
+  console.log(`Example app listening at http://localhost:${port}`)
+} ) ;
+```
+<br/>
 
 ## Support
 Support this project and other game-development tools through [Patreon](https://patreon.com/PudreteDiablo) or [Itch.io](https://pudretediablo.itch.io/)

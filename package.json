@@ -23,5 +23,9 @@
   "bugs": {
     "url": "https://github.com/PudreteDiablo/memorycard-js/issues"
   },
-  "homepage": "https://github.com/PudreteDiablo/memorycard-js#readme"
+  "homepage": "https://github.com/PudreteDiablo/memorycard-js#readme",
+  "dependencies": {
+    "axios": "^0.21.0",
+    "cryptr": "^6.0.2"
+  }
 }
