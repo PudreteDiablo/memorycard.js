@@ -206,6 +206,7 @@ Strict mode can be very useful, but just try to make the code cleanest possible,
 <br/><br/>
 
 ## Methods
+The next methods can be used once you set configuration. Once you call one of these methods that requires *MemoryCard* data, the card file will be loaded and you will not able to change configuration.
 
 ### write( )
 Writes the data in a slot of the *MemoryCard*. This method will overwrite the entire slot if is already in use. If you only want to save a little change like new "coins" amount, you maybe want to use [save( )](#save) method instead.
