@@ -68,7 +68,7 @@ https://cdn.jsdelivr.net/npm/memorycard-js/dist/memorycard.min.js
 Go to [dist folder](https://github.com/PudreteDiablo/memorycard-js/tree/master/dist), download one of the javascript files and save it in your project folder then just import it via html: ```<script src="./memorycard.min.js"></script>``` or node.js: ```require( './memorycard.js' )``` 
 
 ### Advantages
-You can save time in your game development by installing this package in your current game. Don't worry about platforms compatibility or organization, With this tool you can easily access to a safe *user-progress* data storage.
+You can save time in your game development by installing this package in your current game. Don't worry about platforms compatibility or organization, With this tool you can easily access to a safe *user-progress* data storage. Finally, you will get an object with different slots for those games that enable multiple progress save per user *(But you can also use this package to save one slot only)*.
 <br/><br/>
 
 # Available Platforms
@@ -577,7 +577,7 @@ Of course, you can save all changes every time the player changes the scene, but
 
 ### Client Side
 First, ensure to enable `temp` option in the [configuration](#configuration) 
-unless you don't have problem if the player keep a *MemoryCard* data file in the disk drive (couldn't be a problem, 'cause you will set a custom file every time the game starts).
+unless if you don't have problem if the player keep a *MemoryCard* data file in the disk drive (couldn't be a problem, 'cause you will set a custom file every time the game starts).
 
 **Tip:** Ensure to first load the *MemoryCard* data before enable save options in your game or all saved data will be saved in other *MemoryCard* file (lost data).
 
@@ -662,6 +662,10 @@ mySaveMenuButton.onclick = function( ) {
   }
 } ;
 ```
+<br/>
+
+**Why use Client Side Cloud-Save:** If you are looking for *save-slots*, this option is perfect for you, because you will have an automated and organizated system to keep user progress in *memory-slots* even if you decide to save it in your server. But, what happens if you only want to save a single progress in the cloud per user? Well, you can see the next topic: "Server Side"
+
 <br/>
 
 ### Server Side
