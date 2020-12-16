@@ -23,15 +23,15 @@ Save user progress in javascript-based games with slots and objects.
   - [Configuration](#configuration)
     - [Strict Mode](#strict-mode)
   - [Methods](#methods)
+    - [getSummary( )](#getsummary-)
+    - [getAll( )](#getall-)
+    - [getSlot( )](#getslot-)
     - [write( )](#write-)
     - [save( )](#save-)
     - [load( )](#load-)
     - [read( )](#read-)
     - [copy( )](#copy-)
     - [delete( )](#delete-)
-    - [getSummary( )](#getsummary-)
-    - [getAll( )](#getall-)
-    - [getSlot( )](#getslot-)
     - [writeAsync( )](#writeasync-)
     - [saveAsync( )](#saveasync-)
     - [loadAsync( )](#loadasync-)
@@ -203,10 +203,78 @@ var $new = {
 ```
 
 Strict mode can be very useful, but just try to make the code cleanest possible, is not a magic tool.
-<br/><br/>
+<br/><br/><br/>
 
 ## Methods
-The next methods can be used once you set configuration. Once you call one of these methods that requires *MemoryCard* data, the card file will be loaded and you will not able to change configuration.
+The next methods can be used once you set configuration. Once you call one of these methods that requires *MemoryCard* data, the *MemoryCard* will be loaded and you will not able to change configuration again.
+
+
+### getSummary( )
+Returns an array of all slots in the *MemoryCard* even the empty slots. Is just a summary that helps you to draw a "save screen", so It only will returns relevant information like slot_index and the modification date.
+
+```js
+var slots = MemoryCard.getSummary( ) ;
+    slots = [ {
+      index : 0 ,
+      empty : false ,
+      title : "The Lemon Land II" ,
+      date  : Date // <= JavaScript Date
+    } , {
+      index : 1 ,
+      empty : true ,
+      title : "Slot 2" // <= Why 2? Because index 0 = "Slot 1" (It's just a title).
+    } , {
+      index : 2 ,
+      empty : true ,
+      title : "Slot 3"
+    } ] ;
+```
+<br/>
+
+
+### getAll( )
+Same as getSummary( ) but this method also includes data of every slot. Maybe you want to add more info. to your "save screen" such as rupees collected or the game progress.
+
+```js
+var slots = MemoryCard.getSummary( ) ;
+    slots = [ {
+      index : 0 ,
+      empty : false ,
+      title : "The Lemon Land II" ,
+      date  : Date ,
+      data  : {
+        // ALL DATA OF THE SLOT
+      }
+    } , {
+      index : 1 ,
+      empty : true ,
+      title : "Slot 2" ,
+      data  : null
+    } ]
+```
+<br/>
+
+
+### getSlot( )
+Returns all slot data of the specified *slot_index*. If the slot is empty it will returns an object with `empty : true` property.
+
+```js
+var slot = MemoryCard.getSlot( 0 ) ;
+    slow = {
+      index : 0 ,
+      empty : false ,
+      title : "The Lemon Land II" ,
+      date  : Date ,
+      data  : {
+        // ALL DATA OF THE SLOT
+      }
+    } ;
+```
+
+#### Parameters
+- `slot_index` Number - **(Required)** The index of the requested slot. Must be less than the pre-configured number of slots (4 slots by default).
+<br/><br/>
+
 
 ### write( )
 Writes the data in a slot of the *MemoryCard*. This method will overwrite the entire slot if is already in use. If you only want to save a little change like new "coins" amount, you maybe want to use [save( )](#save) method instead.
@@ -299,71 +367,6 @@ MemoryCard.delete( 1 ) ;
 Ask to the player if is sure to delete the selected slot by writing in the dialog box the title of the slot.
 <br/><br/>
 
-### getSummary( )
-Returns an array of all slots in the *MemoryCard* even the empty slots. Is just a summary that helps you to draw a "save screen", so It only will returns relevant information like slot_index and the modification date.
-
-```js
-var slots = MemoryCard.getSummary( ) ;
-    slots = [ {
-      index : 0 ,
-      empty : false ,
-      title : "The Lemon Land II" ,
-      date  : Date // <= JavaScript Date
-    } , {
-      index : 1 ,
-      empty : true ,
-      title : "Slot 2" // <= Why 2? Because index 0 = "Slot 1" (It's just a title).
-    } , {
-      index : 2 ,
-      empty : true ,
-      title : "Slot 3"
-    } ] ;
-```
-<br/>
-
-
-### getAll( )
-Same as getSummary( ) but this method also includes data of every slot. Maybe you want to add more info. to your "save screen" such as rupees collected or the game progress.
-
-```js
-var slots = MemoryCard.getSummary( ) ;
-    slots = [ {
-      index : 0 ,
-      empty : false ,
-      title : "The Lemon Land II" ,
-      date  : Date ,
-      data  : {
-        // ALL DATA OF THE SLOT
-      }
-    } , {
-      index : 1 ,
-      empty : true ,
-      title : "Slot 2" ,
-      data  : null
-    } ]
-```
-<br/>
-
-
-### getSlot( )
-Returns all slot data of the specified *slot_index*. If the slot is empty it will returns an object with `empty : true` property.
-
-```js
-var slot = MemoryCard.getSlot( 0 ) ;
-    slow = {
-      index : 0 ,
-      empty : false ,
-      title : "The Lemon Land II" ,
-      date  : Date ,
-      data  : {
-        // ALL DATA OF THE SLOT
-      }
-    } ;
-```
-
-#### Parameters
-- `slot_index` Number - **(Required)** The index of the requested slot. Must be less than the pre-configured number of slots (4 slots by default).
-<br/>
 
 ### writeAsync( )
 An async option of [write( )](#write-]).
