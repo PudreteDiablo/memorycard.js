@@ -1,0 +1,23 @@
+{
+  "name": "memorycard-js",
+  "version": "0.2.4",
+  "description": "Save user progress in an encrypted file or web-storage (Game Development)",
+  "main": "index.js",
+  "scripts": {
+    "test": "node test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PudreteDiablo/memorycard-js.git"
+  },
+  "keywords": [
+    "game",
+    "development"
+  ],
+  "author": "Diablo Luna <diablorodriguez99@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/PudreteDiablo/memorycard-js/issues"
+  },
+  "homepage": "https://github.com/PudreteDiablo/memorycard-js#readme"
+}
