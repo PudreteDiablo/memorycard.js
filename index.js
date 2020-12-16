@@ -113,7 +113,7 @@ MCARD.getAll = ( ) => {
 MCARD.getSlot = ( index ) => {
   var i = index ; index = `slot-${ i }` ;
   if( MCARD.__cache[ index ] ) { return MCARD.__cache[ index ] ; }
-  
+
 }
 
 /**
@@ -146,10 +146,10 @@ MCARD.write = ( slot, title, data, key ) => {
 /* define module [v] === */
 if( typeof module !== 'undefined' && module.exports ) {
   module.exports  = MCARD ;
-  root.memorycard = MCARD ; 
   root.MCARD      = MCARD ;
+  root.MemoryCard = MCARD ;
 } else { 
-  root.memorycard = MCARD ; 
   root.MCARD      = MCARD ;
+  root.MemoryCard = MCARD ;
 } /* =================== */
 /* define module [^] === */
