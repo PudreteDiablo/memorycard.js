@@ -376,15 +376,12 @@ An async option of [write( )](#write-]).
 ```js
 MemoryCard.writeAsync( slot_index, title, data, ?key ) ;
 ```
-<br/>
-
 
 ### saveAsync( )
 
 ```js
 MemoryCard.saveAsync( slot_index, data, ?key ) ;
 ```
-<br/>
 
 
 ### loadAsync( )
@@ -392,7 +389,6 @@ MemoryCard.saveAsync( slot_index, data, ?key ) ;
 ```js
 MemoryCard.loadAsync( slot_index ) ;
 ```
-<br/>
 
 
 ### readAsync( )
@@ -400,7 +396,6 @@ MemoryCard.loadAsync( slot_index ) ;
 ```js
 MemoryCard.readAsync( ) ;
 ```
-<br/>
 
 
 ### copyAsync( )
@@ -408,7 +403,6 @@ MemoryCard.readAsync( ) ;
 ```js
 MemoryCard.copyAsync( ref_index, dest_index ) ;
 ```
-<br/>
 
 
 ### deleteAsync( )
