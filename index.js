@@ -6,7 +6,6 @@ const { electron } = require('process');
   THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 var root       = typeof window !== "undefined" ? window : this ;
-var MCARD      = { } ;
 var isElectron = ( ) => typeof window !== "undefined" && window.process && window.process.platform ? true : false ;
 var isNodejs   = ( ) => typeof module !== 'undefined' && module.exports ? true : false ;
 var isCordova  = ( ) => typeof window !== "undefined" && window.hasOwnProperty( 'cordova' ) ? true : false ;
@@ -14,6 +13,10 @@ var fs         = isNodejs( ) || isElectron( ) ? require( 'fs' ) : { } ;
 var path       = isNodejs( ) || isElectron( ) ? require( 'path' ) : { } ;
 var Cryptr     = isNodejs( ) || isElectron( ) ? require( 'cryptr' ) : null ;
 var cryptr     = Cryptr ? new Cryptr( 'WATERMELON-CIGARETTES' ) : { } ;
+var MCARD      = { 
+  get loaded( )       { return this.__config.loaded ; } ,
+  get configObject( ) { return this.__config ; }
+} ;
 
 MCARD.__config = {
   slots   : 4 , 
@@ -51,6 +54,7 @@ MCARD.__cache = { } ;
  * ```
  */
 MCARD.config = ( object ) => {
+  if( MCARD.loaded === true ) { throw new Error( 'You can\'t change config once the MemoryCard was loaded.' ) ; }
   if( typeof object !== "object" ) { throw new Error( 'The provided parameter is not a json object.' ) ; }
   if( object.strict_mode === true && !object.template ) 
     { throw new Error( 'To use "strict_mode" you need to declare a template in config function.' ) ; }
@@ -172,7 +176,9 @@ MCARD.read = ( ) => {
     }
   } /* clean */
   for( var i = 0 ; i < length ; i++ ) {
+    if( !data[ i ] ) {
 
+    }
   } /* ===== */
   return data ;
 } ;

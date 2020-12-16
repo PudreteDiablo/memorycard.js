@@ -29,11 +29,6 @@ Save user progress in javascript-based games with slots and objects.
     - [read( )](#read-)
     - [copy( )](#copy-)
     - [delete( )](#delete-)
-    - [getCardData( )](#getcarddata-)
-    - [setCardData( )](#setcarddata-)
-    - [http( )](#http-)
-    - [decryptCardData( )](#decryptcarddata-)
-    - [decryptCardFile( )](#decryptcardfile-)
     - [getSummary( )](#getsummary-)
     - [getAll( )](#getall-)
     - [getSlot( )](#getslot-)
@@ -43,6 +38,9 @@ Save user progress in javascript-based games with slots and objects.
     - [readAsync( )](#readasync-)
     - [copyAsync( )](#copyasync-)
     - [deleteAsync( )](#deleteasync-)
+    - [getCardData( )](#getcarddata-)
+    - [setCardData( )](#setcarddata-)
+    - [http( )](#http-)
     - [on( )](#on-)
   - [Events](#events)
   - [Properties](#properties)
@@ -52,7 +50,7 @@ Save user progress in javascript-based games with slots and objects.
   - [Client Side](#client-side)
     - [No-HTTP](#no-http-manually)
     - [HTTP](#http-automatic)
-  - [Server Side (Recommended)](#server-side)
+  - [Server Side](#server-side)
 - [Support](#support)
 
 # Installation
@@ -107,7 +105,7 @@ MCARD.load( ) ;
 <br/><br/>
 
 ## Configuration
-The configuration is optional, but helps you to have more control about your *MemoryCard* use flow. Once you have the reference of the *MemoryCard Object*, just call the **config( )** method to set your preferences. The configuration is adaptative, so you can change the config while the game/app is running even if the current *MemoryCard Slots* was saved with different configuration. **It could be helpful but also dangerous, so be careful.**
+The configuration is optional, but helps you to have more control about your *MemoryCard* use flow. Once you have the reference of the *MemoryCard Object*, just call the **config( )** method to set your preferences. You will not able to change the configuration once the selected *MemoryCard* is loaded.
 
 ```js
 MemoryCard.config( config_object ) ;
@@ -300,74 +298,6 @@ MemoryCard.delete( 1 ) ;
 Ask to the player if is sure to delete the selected slot by writing in the dialog box the title of the slot.
 <br/><br/>
 
-
-### getCardData( )
-Returns an encrypted *MemoryCard* data to save in an external drive like a cloud-storage.
-
-```js
-MemoryCard.getCardData( ) ;
-```
-<br/>
-
-
-### setCardData( )
-Set custom encrypted *MemoryCard* data to load slots and *user-progress*. You can use this method to load a *MemoryCard* backup or data requested from a cloud-storage.
-
-If you will use a full "cloud-save-system", **I recommend to enable the `temp` option in the [MemoryCard Configuration](#configuration).** This will allow to delete automatically the *MemoryCard* files by setting `/tmp` folder as *MemoryCard* file or switching LocalStorage to SessionStorage if you will use a Browser instead Node.js as platform.
-
-```js
-MemoryCard.setCardData( MemoryCard_Data ) ;
-```
-
-#### Parameters
-- `MemoryCard_Data` String | **(Required)** A valid encrypted string that contains all *MemoryCard* data. 
-<br/><br/>
-
-
-### http( )
-Loads file from the defined url and then tries to load it as *MemoryCard* data through [setCardData( )](#setcarddata-).
-
-**Returns a Promise.**
-
-```js
-MemoryCard
-  .http( url )
-  .then( ( ) => {
-    // CLOUD-MEMORYCARD LOADED SUCCESSFULLY
-    // READY TO GET SLOTS DATA
-  } )
-  .catch( err => {
-    // ERROR
-    console.error( 'MEMORYCARD_CLOUD_LOAD_ERROR ::', err ) ;
-  } ) ;
-```
-
-#### Parameters
-- `url` URL | **(Required)** A valid url that returns an encrypted *MemoryCard* data obtained through [getCardData( )](#getcarddata-)
-<br/><br/>
-
-### decryptCardData( )
-(Node.js Only) Returns a JSON object of the *MemoryCard* data defined as parameter.
-
-```js
-MemoryCard.decryptCardData( encrypted_data ) ;
-```
-
-#### Parameters
-- `encrypted_data` String | **(Required)** A valid encrypted *MemoryCard* data obtained through [getCardData( )](#getcarddata-)
-<br/><br/>
-
-### decryptCardFile( )
-(Node.js Only) Same as [decryptCardData( )](#decryptcarddata-) but this method seek the file directly in the provided path.
-
-```js
-MemoryCard.getCardData( memoryCardFile_Path ) ;
-```
-
-#### Parameters
-- `memoryCardFile_Path` String | **(Required)** A valid path of encrypted *MemoryCard* data file.
-<br/><br/>
-
 ### getSummary( )
 Returns an array of all slots in the *MemoryCard* even the empty slots. Is just a summary that helps you to draw a "save screen", so It only will returns relevant information like slot_index and the modification date.
 
@@ -433,23 +363,6 @@ var slot = MemoryCard.getSlot( 0 ) ;
 #### Parameters
 - `slot_index` Number - **(Required)** The index of the requested slot. Must be less than the pre-configured number of slots (4 slots by default).
 <br/>
-
-
-### on( )
-Adds an event listener depending of the type defined as first parameter. See [Events](#evets) to check available events.
-
-```js
-// MemoryCard.on( eventType, callback ) ;
-MemoryCard.on( 'save', ( ev ) => {
-  console.log( ev.slot_index ) ; // 0
-} ) ;
-```
-
-#### Parameters
-- `eventType` String | **(Required)** The type of the event to wait.
-- `callback` Function | **(Required)** The function that will be called everytime event fires.
-<br/>
-
 
 ### writeAsync( )
 An async option of [write( )](#write-]).
@@ -524,6 +437,68 @@ MemoryCard
 <br/><br/>
 
 
+### getCardData( )
+Returns an encrypted *MemoryCard* data to save in an external drive like a cloud-storage.
+
+```js
+MemoryCard.getCardData( ) ;
+```
+<br/>
+
+
+### setCardData( )
+Set custom encrypted *MemoryCard* data to load slots and *user-progress*. You can use this method to load a *MemoryCard* backup or data requested from a cloud-storage.
+
+If you will use a full "cloud-save-system", **I recommend to enable the `temp` option in the [MemoryCard Configuration](#configuration).** This will allow to delete automatically the *MemoryCard* files by setting `/tmp` folder as *MemoryCard* file or switching LocalStorage to SessionStorage if you will use a Browser instead Node.js as platform.
+
+```js
+MemoryCard.setCardData( MemoryCard_Data ) ;
+```
+
+#### Parameters
+- `MemoryCard_Data` String | **(Required)** A valid encrypted string that contains all *MemoryCard* data. 
+<br/><br/>
+
+
+### http( )
+Loads file from the defined url and then tries to load it as *MemoryCard* data through [setCardData( )](#setcarddata-).
+
+**Returns a Promise.**
+
+```js
+MemoryCard
+  .http( url )
+  .then( ( ) => {
+    // CLOUD-MEMORYCARD LOADED SUCCESSFULLY
+    // READY TO GET SLOTS DATA
+  } )
+  .catch( err => {
+    // ERROR
+    console.error( 'MEMORYCARD_CLOUD_LOAD_ERROR ::', err ) ;
+  } ) ;
+```
+
+#### Parameters
+- `url` URL | **(Required)** A valid url that returns an encrypted *MemoryCard* data obtained through [getCardData( )](#getcarddata-)
+<br/><br/>
+
+
+### on( )
+Adds an event listener depending of the type defined as first parameter. See [Events](#evets) to check available events.
+
+```js
+// MemoryCard.on( eventType, callback ) ;
+MemoryCard.on( 'save', ( ev ) => {
+  console.log( ev.slot_index ) ; // 0
+} ) ;
+```
+
+#### Parameters
+- `eventType` String | **(Required)** The type of the event to wait.
+- `callback` Function | **(Required)** The function that will be called everytime event fires.
+<br/><br/>
+
+
 ## Events
 Catchable events through [on( )](#on-) method.
 
@@ -564,12 +539,22 @@ Returns:
 - `EventData` Object
   - `slot_index` Number | The index of the new slot. 
   - `slot_ref_index` Number | The index of the copied slot.
-<br/><br/><br/>
+<br/><br/>
 
+
+### Event: `card-loaded`
+Fired when a new *MemoryCard* data is loaded by [setCardData( )](#setcarddata-) or [read( )](#read-) methods. Even if you don't call one of these methods the package requires to call [read( )](#read-) at the first time when you call a method to access to a slot or try write one.
+
+Returns:
+- `EventData` Object
+  - `card_data` Object | The full loaded data of the new inserted card. 
+<br/><br/>
 
 
 ## Properties
-Properties of the *MemoryCard* Object. I think are useless (because I used it to develop the methods) but... here it is.
+Properties of the *MemoryCard* Object. I think are useless (except for the first one, because I used it to develop the methods) but... here it is.
+
+`MemoryCard.loaded` Boolean | Allows you to check if a MemoryCard is already loaded.
 
 `MemoryCard.__config` Object | The object config used every time a method is called and requires it. This object is modified with the [config( )](#configuration) method. **I recommend to you this property as read-only.** Please modify any .__config property by [config( )](#configuration) method.
 
@@ -602,29 +587,89 @@ unless you don't have problem if the player keep a *MemoryCard* data file in the
 You must download your *MemoryCard* data from your server by yourself. Once you have the data loaded, call the [setCardData( )](#setcarddata-) method to set the previously saved data from [getCardData( )](#getcarddata-) as your current *MemoryCard* data.
 
 #### HTTP (Automatic)
-You can save time if you provide a URL to directly get *MemoryCard* data from your server or cloud-storage.
-<br/><br/>
-### Server Side
-Client side option for cloud-save system can be problematic if you are not a experienced javascript programmer. You can perfectly let server do all work and just provide a final JSON objecto to the client through HTTP.
+You can save time if you provide a URL to directly get *MemoryCard* data from your server or cloud-storage. Just call [http( )](#http) method and wait a response to continue with your user-save-process (see the example).
+<br/>
 
-#### Here an example with express.js
+#### An example of HTTP Client-Side Save/Load Data
 ```js
-const express = require( 'express' ) ;
-const memory  = require( 'memorycard-js' ) ;
-const app     = express( ) ;
-const port    = 3000 ;
-const fs      = require( 'fs' ) ;
-
-app.get( '/getUserMemoryCard*', ( req, res ) => {
-  var user_id = req.query.id ;
-
+// CONFIGURATION
+MemoryCard.config( {
+  temp  : true ,
+  slots : 8 ,
+  strict_mode : true
 } ) ;
 
-app.listen( port, ( ) => {
-  console.log(`Example app listening at http://localhost:${port}`)
+// SETTING UP EVENTS [v]
+MemoryCard.on( 'load-card', ( ev ) => {
+  console.log( 'New MemoryCard has inserted =>', ev.card_data ) ;
+  // ENABLING SAVE-MENU because MemoryCard is ready to read and write [v]
+  mySaveHTMLForm.enabled = true ;
+  // ALSO DON'T FORGET TO DISPLAY SLOTS IN THE SAVE-MENU [v]
+  var slots = MemoryCard.getSummary( ) ;
+  mySaveHTMLForm.displaySlots( slots ) ;
 } ) ;
+
+MemoryCard.on( 'save', ( ev ) => {
+  console.log( 'A slot was modified =>', `Slot ${ ev.slot_index + 1 }`, ev.slot_data ) ;
+  // DISABLE SAVE-MENU until the data gets saved in the cloud (for security) [v]
+  mySaveHTMLForm.enabled = false ;
+  // NOW SAVE ALL MEMORYCARD IN THE SERVER/CLOUD-STORAGE
+  fetch( 'https://my-http-server.com/saveUserMemoryCard', {
+    method : 'POST',
+    headers : {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    } ,
+    body : JSON.stringify( { 
+      user_id : "12938", 
+      card_data : MemoryCard.getCardData( )
+    } )
+  } ).then( ( ) => {
+    if( response.status >= 400 ) 
+      { throw new Error( "Bad response from server" ) ; }
+    // DATA SAVED SUCCESSFULLY
+  } ).catch( err => {
+    console.error( 'MEMORYCARD_CLOUD_SAVE_ERROR ::', err ) ;
+  } ).finally( ( ) => {
+    // RE-ENABLE SAVE-MENU [v]
+    mySaveHTMLForm.enabled = true ;
+  } ) ;
+} ) ;
+
+// LOAD CLOUD-MEMORYCARD THROUGH HTTP WHEN USER OPEN SAVE-MENU [v]
+mySaveMenuButton.onclick = function( ) {
+  if( !MemoryCard.loaded ) {
+    // LOAD A MEMORYCARD THROUGH YOU OWN API or SERVER.
+    // For this method, .http( ), the response must be a string of all
+    // encrypted data of the MemoryCard that you saved in your server
+    // with the .getCardData( ) method before (such as the 'save' event).
+    MemoryCard
+      .http( 'https://my-http-server.com/getUserMemoryCard?id=12938' )
+      .then( ( ) => {
+        // HTTP-MEMORYCARD LOADED SUCCESSFULLY
+        // Now just wait that the 'save' event gets called.
+        // Also you can set a function right here instead.
+      } )
+      .catch( err => {
+        console.error( 'LOAD_HTTP_MEMORYCARD_ERROR ::', err ) ;
+      } ) ;
+  } else {
+    // ENABLING SAVE-MENU because MemoryCard is already loaded 
+    // and available to read and write [v]
+    mySaveHTMLForm.enabled = true ;
+    var slots = MemoryCard.getSummary( ) ;
+    mySaveHTMLForm.displaySlots( slots ) ;
+  }
+} ;
 ```
 <br/>
+
+### Server Side
+Client side option for cloud-save system can be problematic if you are not a experienced javascript programmer. You can perfectly let server do all work and just provide a final JSON object to the client through HTTP, but for this option MemoryCard-JS seems useless because you can perfectly use a *Database* such as *Firebase Firestore*, *MySQL* or any other service that can provide a object response through http.
+
+So, if you prefer a full server-side system, I recommend you to search for a nice *Realtime Database* for your project.
+<br/><br/>
+
 
 ## Support
 Support this project and other game-development tools through [Patreon](https://patreon.com/PudreteDiablo) or [Itch.io](https://pudretediablo.itch.io/)
