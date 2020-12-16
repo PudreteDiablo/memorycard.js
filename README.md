@@ -233,10 +233,10 @@ var slots = MemoryCard.getSummary( ) ;
 
 
 ### getAll( )
-Same as getSummary( ) but this method also includes data of every slot. Maybe you want to add more info. to your "save screen" such as rupees collected or the game progress.
+Same as [getSummary( )](#getsummary-) but this method also includes data of every slot. Maybe you want to add more info. to your "save screen" such as rupees collected or the game progress.
 
 ```js
-var slots = MemoryCard.getSummary( ) ;
+var slots = MemoryCard.getAll( ) ;
     slots = [ {
       index : 0 ,
       empty : false ,
