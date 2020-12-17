@@ -1,12 +1,20 @@
-# MemoryCard-JS
-Save user progress in javascript-based games with slots and objects.
+<div style="text-align:center">
+  <img src="logo.png" />
+  <br/>
+  <h3>
+    Save user progress in javascript-based games with slots and objects.
+  </h3>
+  <br/>
+  
+  [![npm version](https://badge.fury.io/js/memorycard-js.svg)](//npmjs.com/package/memorycard-js)
+  [![Support](https://img.shields.io/badge/Support%20Project-Patreon-orange.svg)](https://patreon.com/PudreteDiablo)
+  [![Electron](https://img.shields.io/badge/Electron-Yes-blue.svg)](#available-platforms)
+  [![Cordova](https://img.shields.io/badge/Cordova-Yes-blue.svg)](#available-platforms)
+  [![Browsers](https://img.shields.io/badge/Browsers-Yes-blue.svg)](#available-platforms)
+  [![Backend Server](https://img.shields.io/badge/Backend%20Servers-Yes-blue.svg)](#available-platforms)
 
-[![npm version](https://badge.fury.io/js/memorycard-js.svg)](//npmjs.com/package/memorycard-js)
-[![Support](https://img.shields.io/badge/Support%20Project-Patreon-orange.svg)](https://patreon.com/PudreteDiablo)
-[![Electron](https://img.shields.io/badge/Electron-Yes-blue.svg)](#available-platforms)
-[![Cordova](https://img.shields.io/badge/Cordova-Yes-blue.svg)](#available-platforms)
-[![Browsers](https://img.shields.io/badge/Browsers-Yes-blue.svg)](#available-platforms)
-[![Backend Server](https://img.shields.io/badge/Backend%20Servers-Yes-blue.svg)](#available-platforms)
+</div>
+<br/>
 
 ## Content Table
 
