@@ -1,4 +1,4 @@
-const m = require( './index.js' ) ;
+const m = require( 'memorycard.js' ) ;
 
 m.config( {
   key : 'tacos' ,
