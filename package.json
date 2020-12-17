@@ -1,6 +1,6 @@
 {
   "name": "memorycard.js",
-  "version": "0.2.4",
+  "version": "0.2.6",
   "description": "Save in-game user progress in an encrypted file or web-storage (Game Development)",
   "main": "index.js",
   "scripts": {

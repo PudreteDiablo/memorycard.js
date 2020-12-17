@@ -545,7 +545,7 @@ MemoryCard.setCardData( MemoryCard_Data ) ;
 
 
 ### http( )
-Loads file from the defined url and then tries to load it as *MemoryCard* data through [setCardData( )](#setcarddata-).
+Loads file from the defined url (the URL must return a plain-text) and then tries to load it as *MemoryCard* data through [setCardData( )](#setcarddata-).
 
 **Returns a Promise.**
 

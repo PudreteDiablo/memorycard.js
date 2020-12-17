@@ -555,6 +555,70 @@ MCARD.setCardData = ( raw ) => {
 } ;
 
 
+/**
+ * Loads file (RAW) from the defined url and then tries to load it as MemoryCard data through setCardData( ).
+ * 
+ * @param {!URL} url - (Required) A valid url that returns a plain-text of the encrypted MemoryCard to load. 
+ * 
+ * @example
+ * ```js
+ * MemoryCard
+ *   .http( url )
+ *   .then( ( ) => {
+ *     // CLOUD-MEMORYCARD LOADED SUCCESSFULLY
+ *     // READY TO GET SLOTS DATA
+ *   } )
+ *   .catch( err => {
+ *     // ERROR
+ *     console.error( 'MEMORYCARD_CLOUD_LOAD_ERROR ::', err ) ;
+ *   } ) ;
+ * ```
+ */
+MCARD.http = ( url ) => {
+  if( typeof url !== "string" ) 
+    { throw new Error( 'Please enter a valid string_url to request the MemoryCard_data.' ) ; }
+  return new Promise( ( res, rej ) => {
+    if( isNodejs( ) ) {
+      var axios = require( 'axios' ) ;
+          axios . get( url, {
+              responseType : 'text'
+            } ).then( function( response ) {
+              try {
+                MCARD.setCardData( response.data ) ;
+              } catch( ex ) {
+                return rej( 'LOAD_HTTP_MEMORYCARD_ERROR :: ' + ex.toString( ) ) ;
+              } return res( true ) ;
+            } ).catch( function( error ) {
+              return rej( error ) ;
+            } ) ;
+    } else {
+      let xhr = new XMLHttpRequest( ) ;
+          xhr . open( 'GET', url ) ;
+          xhr . responseType = 'text' ;
+          xhr . send( ) ;
+          xhr . onload = function() {
+            if( xhr.status != 200 ) {
+              return rej( `Error ${xhr.status}: ${xhr.statusText}` ) ;
+            } else { 
+              var raw = xhr.responseText ;
+              if( typeof raw !== "string" ) 
+                { throw new Error( 'Invalid response, a plain-text was expected but the request got: ' + raw.toString( ) ) ; }
+              try {
+                MCARD.setCardData( raw ) ;
+              } catch( ex ) {
+                return rej( 'LOAD_HTTP_MEMORYCARD_ERROR :: ' + ex.toString( ) ) ;
+              } return res( true ) ;
+            }
+          } ;
+          xhr . onerror = function() {
+            return rej( 'Network Error' ) ;
+          } ;
+    }
+  } ) ;
+} ;
+
+
+
 MCARD.on = ( type, cb ) => {
   if( typeof type !== "string" ) { throw new Error( 'Please define an event type as first parameter :: MemoryCard.on( eventType<string>, callback<function> )' ) ; } 
   if( typeof cb !== "function" ) { throw new Error( 'Please define an callback as second parameter :: MemoryCard.on( eventType<string>, callback<function> )' ) ; }
