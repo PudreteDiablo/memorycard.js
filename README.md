@@ -338,7 +338,7 @@ MemoryCard.write( 2, "Cookies Island", {
 #### Parameters
 - `slot_index` Number | **(Required)** Declare the slot where the data will be saved.
 - `title` String | **(Optional) Default: "Slot N" where N = slot_index + 1.** Set a title to display in the slots summary.
-- `data` Object | **(Required)** All data to save in the slot. If you have enabled **Strict Mode**, the data object will be processed before save it in the storage. See [Strict Mode](#strict-mode) for more information.
+- `data` Object | **(Required)** All data to save in the slot **([JSON Only](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON), no classes or special objects, just basic values like strings, arrays, numbers, boleeans even more JSON objects inside the main data object)**. If you have enabled **Strict Mode**, the data object will be processed before save it in the storage. See [Strict Mode](#strict-mode) for more information.
 <br/><br/>
 
 ### save( )
@@ -356,7 +356,7 @@ MemoryCard.save( 2, {
 #### Parameters
 - `slot_index` Number | **(Required)** Declare the slot where the data will be saved.
 - `title` String | **(Optional) Default: The current slot_title.** Set a title to display in the slots summary.
-- `data` Object | **(Required)** The data to overwrite in the slot.
+- `data` Object | **(Required)** The data to overwrite in the slot. Remember to set only [JSON-valid](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON) object or you will corrupt your *MemoryCard*.
 <br/><br/>
 
 ### load( )
