@@ -1,5 +1,5 @@
 {
-  "name": "memorycard-js",
+  "name": "memorycard.js",
   "version": "0.2.4",
   "description": "Save user progress in an encrypted file or web-storage (Game Development)",
   "main": "index.js",
