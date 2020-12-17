@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MemoriCard-JS Test</title>
+</head>
+<body>
+  MemoryCard-JS Test.
+</body>
+<script src="./index.js"></script>
+<script>
+  function write( str ) {
+    document.getElementsByTagName( 'body' )[ 0 ].innerHTML += `<br/> ${ str }` ;
+  }
+
+  MemoryCard.config( {
+    key : 'tacos' ,
+    temp : false
+  } )
+
+  console.log( MemoryCard.read( ) )
+</script>
+</html>

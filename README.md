@@ -34,12 +34,16 @@ Save user progress in javascript-based games with slots and objects.
     - [read( )](#read-)
     - [copy( )](#copy-)
     - [delete( )](#delete-)
+    - [format( )](#format-)
+    - [reset( )](#reset-)
     - [writeAsync( )](#writeasync-)
     - [saveAsync( )](#saveasync-)
     - [loadAsync( )](#loadasync-)
     - [readAsync( )](#readasync-)
     - [copyAsync( )](#copyasync-)
     - [deleteAsync( )](#deleteasync-)
+    - [formatAsync( )](#formatasync-)
+    - [resetAsync( )](#resetasync-)
     - [getCardData( )](#getcarddata-)
     - [setCardData( )](#setcarddata-)
     - [http( )](#http-)
@@ -235,7 +239,8 @@ var slots = MemoryCard.getSummary( ) ;
       index : 0 ,
       empty : false ,
       title : "The Lemon Land II" ,
-      date  : Date // <= JavaScript Date
+      date  : '2020-12-17T11:53:50.321Z' , // <= ISO Format Date
+      DATE  : Date // <= JavaScript Date
     } , {
       index : 1 ,
       empty : true ,
@@ -261,7 +266,8 @@ var slots = MemoryCard.getAll( ) ;
       index : 0 ,
       empty : false ,
       title : "The Lemon Land II" ,
-      date  : Date ,
+      date  : '2020-12-17T11:53:50.321Z' ,
+      DATE  : Date ,
       data  : {
         // ALL DATA OF THE SLOT
       }
@@ -306,7 +312,7 @@ var slot = MemoryCard.getSlot( 0 ) ;
 Writes the data in a slot of the *MemoryCard*. This method will overwrite the entire slot if is already in use. If you only want to save a little change like new "coins" amount, you maybe want to use [save( )](#save) method instead.
 
 ```js
-// MemoryCard.write( slot_index, title, data, ?key ) ;
+// MemoryCard.write( slot_index, ?title, data, ?key ) ;
 MemoryCard.write( 2, "Cookies Island", {
  username : "Diablo Luna"
  scene : 3 ,
@@ -319,7 +325,7 @@ MemoryCard.write( 2, "Cookies Island", {
 
 #### Parameters
 - `slot_index` Number | **(Required)** Declare the slot where the data will be saved.
-- `title` String | **Default: "Slot N" where N = slot_index + 1.** Set a title to display in the slots summary.
+- `title` String | **(Optional) Default: "Slot N" where N = slot_index + 1.** Set a title to display in the slots summary.
 - `data` Object | **(Required)** All data to save in the slot. If you have enabled **Strict Mode**, the data object will be processed before save it in the storage. See [Strict Mode](#strict-mode) for more information.
 - `key` String | **(Optional)** Set the required key to save the new data in the slot, only if you have declared it before in the [configuration](#configuration).
 <br/><br/>
@@ -330,7 +336,7 @@ With this method you can save one or more properties in an already saved slot. I
 Unlike [write( )](#write-), when you are in **strict mode**, only the defined properties in the parameters will be processed and fixed to save in the slot. 
 
 ```js
-// MemoryCard.save( slot_index, data, ?key ) ;
+// MemoryCard.save( slot_index, ?title, data, ?key ) ;
 MemoryCard.save( 2, {
  rupees : 32
 } , "XMJSKO92" ) ;
@@ -338,6 +344,7 @@ MemoryCard.save( 2, {
 
 #### Parameters
 - `slot_index` Number | **(Required)** Declare the slot where the data will be saved.
+- `title` String | **(Optional) Default: The current slot_title.** Set a title to display in the slots summary.
 - `data` Object | **(Required)** The data to overwrite in the slot.
 - `key` String | **(Optional)** Set the required key to save the new data in the slot, only if you have declared it before in the [configuration](#configuration).
 <br/><br/>
@@ -403,6 +410,24 @@ Ask to the player if is sure to delete the selected slot by writing in the dialo
 <br/><br/>
 
 
+### format( )
+Delete all saved slots and set all as *empty slot*.
+
+```js
+MemoryCard.format( ) ;
+```
+<br/>
+
+
+### reset( )
+Do you prefer to delete entire *MemoryCard* even the file or record in the LocalStorage to create new one?. This method will delete entire data.
+
+```js
+MemoryCard.reset( ) ;
+```
+<br/>
+
+
 ### writeAsync( )
 An async option of [write( )](#write-]).
 
@@ -444,6 +469,20 @@ MemoryCard.copyAsync( ref_index, dest_index ) ;
 
 ```js
 MemoryCard.deleteAsync( slot_index ) ;
+```
+
+
+### formatAsync( )
+
+```js
+MemoryCard.formatAsync( ) ;
+```
+
+
+### resetAsync( )
+
+```js
+MemoryCard.resetAsync( ) ;
 ```
 
 
@@ -580,7 +619,7 @@ Fired when a new *MemoryCard* data is loaded by [setCardData( )](#setcarddata-) 
 
 Returns:
 - `EventData` Object
-  - `card_data` Object | The full loaded data of the new inserted card. 
+  - `card_data` Object | The full loaded data of the new inserted card as returned in [read( )](#read-). 
 <br/><br/>
 
 
