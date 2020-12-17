@@ -24,7 +24,7 @@ MemoryCard.on( 'save', ( ev ) => {
 // READY TO CALL METHODS [v]
 function saveGame( data ) {
   // Save in slot 1 - slot_index = 0 [v]
-  MemoryCard.save( 0, 'My Title for Slots Summary', data ) ;
+  MemoryCard.write( 0, 'My Title for Slots Summary', data ) ;
   // Once saved, return true ;
   return true ;
 }
