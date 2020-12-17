@@ -137,7 +137,10 @@ It just helps to organize the data and avoids a huge *disk usage* (Web-LocalStor
 #### Card Keys
 Every time you create a *MemoryCard* (Automatically created when the package doesn't find the specified file or a record in the LocalStorage), the package will set the [pre-configured key](#configuration) as *MemoryCard* encryption-key and **will be locked** (not-changable).
 
-*Tip:* Create a unique key based on the user-id (recommended) or also by requesting a unique device-id with tools like [machine-id npm package](https://www.npmjs.com/package/machine-id). Also you can create a unique key for
+*Tip:* Create a unique key based on the user-id (recommended) or also by requesting a unique device-id (not recommended for cloud-save-systems) with tools like [machine-id npm package](https://www.npmjs.com/package/machine-id).
+
+##### How it works?:
+Create New MemoryCard -> Set the Pre-Configured Key -> Check if the Pre-configured key matchs with the MemoryCard file every game init -> Allow write/read if key matches correctly. 
 
 This feature have two objectives:
 - Increase write secutiry by requesting the *card key* every time the game starts and load the *MemoryCard* to get user-progress.
