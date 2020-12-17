@@ -52,6 +52,7 @@ Save user progress in javascript-based games with slots and objects.
   - [Properties](#properties)
 - [Write vs. Save](#write-vs-save)
 - [Automatic vs. Manual](#automatic-vs-manual-save)
+- [Security Practices](#security-practices)
 - [How to Set Up a Cloud-Save System](#how-to-set-a-cloud-save-system)
   - [Client Side](#client-side)
     - [No-HTTP](#no-http-manually)
@@ -653,6 +654,15 @@ Maybe you think that save is useless because only allows to save in already save
 This depends totally about your game and the genre of it. Just imagine, a FPS horror game where you need to save a property named `scene` every time the player changes the scene, but at the same time needs a *manual save* to keep all big changes in the storage like the chapter number or all new added items in to the inventory.
 
 Of course, you can save all changes every time the player changes the scene, but it could affect performance. As I said before, it depends of your game and your imagination.
+<br/><br/>
+
+## Security Practices
+Some times the MemoryCard security will not be a problem, because you maybe don't have problem if your players exchange *MemoryCard* files to advance in your game that only have 1-Player support and doesn't have a online-multiplayer option.
+
+But, if you game needs to protect the *MemoryCard* from the hackers and cheaters, just follow the next recommendations:
+- Use a unique [Card Key](#card-keys) per player. You can easily make one with their IDs even create a special key in your Database for every new player in your game.
+- In *Electron* or *Node.js* based games, you can easily setup a hidden file for the *MemoryCard*, just change the property `file` in the [configuration](#configuration).
+- The *MemoryCard* file is encrypted and the decryption needs the pre-configured key to show the file content. It's a unique secure encryption but, at the same time, friendly to work perfectly in all platforms. But, you can re-encrypt the *MemoryCard* file by yourself with one of the many free javascript-libraries in internet. You can implement this re-encryption with [getCardData( )](#getcarddata-) and [setCardData( )](#setcarddata-) methods by loading the file manually, allowing you to work with the *MemoryCard* data after and before it usage.
 <br/><br/>
 
 ## How to Set Up a Cloud-Save System
