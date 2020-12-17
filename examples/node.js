@@ -5,7 +5,11 @@ MemoryCard = require( '../dist/memorycard.js' ) ;
 MemoryCard.config( {
   file  : './memorycard.data' ,
   slots : 8 ,
-  strict_mode : true
+  strict_mode : true ,
+  template : {
+    rupees : 0 ,
+    map : "home"
+  }
 } ) ;
 
 // DEFINE EVENTS FIRST (Recommended) [v]

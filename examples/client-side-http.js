@@ -1,4 +1,4 @@
-MemoryCard = require( 'memorycard-js' ) ; // <= Only for Node.js or Electron
+MemoryCard = require( '../dist/memorycard.js' ) ; // <= Only for Node.js or Electron
 // In other platforms like cordova and browsers, a default global object will
 // created with name 'MemoryCard' or 'MCARD'.
 

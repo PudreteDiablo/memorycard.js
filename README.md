@@ -5,8 +5,8 @@
     Save user progress in javascript-based games with slots and objects.
   </h3>
   <br/>
-  
-  [![npm version](https://badge.fury.io/js/memorycard-js.svg)](//npmjs.com/package/memorycard-js)
+
+  [![npm version](https://badge.fury.io/js/memorycard.js.svg)](//npmjs.com/package/memorycard.js)
   [![Support](https://img.shields.io/badge/Support%20Project-Patreon-orange.svg)](https://patreon.com/PudreteDiablo)
   [![Electron](https://img.shields.io/badge/Electron-Yes-blue.svg)](#available-platforms)
   [![Cordova](https://img.shields.io/badge/Cordova-Yes-blue.svg)](#available-platforms)
@@ -71,16 +71,16 @@
 # Installation
 #### Node.js (Electron/Backend-Servers)
 ```
-npm i memorycard-js --save
+npm i memorycard.js --save
 ```
 
 #### Browser CDN
 ```
-https://cdn.jsdelivr.net/npm/memorycard-js/dist/memorycard.min.js
+https://cdn.jsdelivr.net/npm/memorycard.js/dist/memorycard.min.js
 ```
 
 #### Self-Host / Download
-Go to [dist folder](https://github.com/PudreteDiablo/memorycard-js/tree/master/dist), download one of the javascript files and save it in your project folder then just import it via html: ```<script src="./memorycard.min.js"></script>``` or node.js: ```require( './memorycard.js' )``` 
+Go to [dist folder](https://github.com/PudreteDiablo/memorycard.js/tree/master/dist), download one of the javascript files and save it in your project folder then just import it via html: ```<script src="./memorycard.min.js"></script>``` or node.js: ```require( './memorycard.js' )``` 
 
 ### Advantages
 You can save time in your game development by installing this package in your current game. Don't worry about platforms compatibility or organization, With this tool you can easily access to a safe *user-progress* data storage. Finally, you will get an object with different slots for those games that enable multiple progress save per user *(But you can also use this package to save one slot only)*.
@@ -93,13 +93,13 @@ This tool was designed to be compatible with all useful javascript frameworks su
 | :--------------: | :----------: | :----------: | :------------: |
 | OS Drive         | LocalStorage | LocalStorage | Encrypted Data |
 
-If you want to save the data in a *cloud storage*, you can easily request the encrypted data instead of save it by installing memorycard-js in you server (safer) or in the client-side. Also you can use [Strict Mode](#strict-mode) and [Card Keys](#card-keys) to improve the security.
+If you want to save the data in a *cloud storage*, you can easily request the encrypted data instead of save it by installing memorycard.js in you server (safer) or in the client-side. Also you can use [Strict Mode](#strict-mode) and [Card Keys](#card-keys) to improve the security.
 
 **Electron Tip:** Don't forget to enable [nodeIntegration](https://www.electronjs.org/docs/tutorial/quick-start#create-the-main-script-file) or you will get a error saying something like: "require" is not a function.
 <br/>
 
 # Examples
-As programmer, I prefer to look at examples to understand how a package works. So I make a few examples with comments in the [examples folder](https://github.com/PudreteDiablo/memorycard-js/tree/master/examples).
+As programmer, I prefer to look at examples to understand how a package works. So I make a few examples with comments in the [examples folder](https://github.com/PudreteDiablo/memorycard.js/tree/master/examples).
 <br/>
 
 # Documentation
@@ -111,7 +111,7 @@ Depending on the current platform, you can access to the package by importing th
 
 #### Node.js (Backend Servers/Electron)
 ```js
-const MemoryCard = require( 'memorycard-js' ) ;
+const MemoryCard = require( 'memorycard.js' ) ;
 ```
 
 #### Global Object (Cordova/Browsers/Electron)
@@ -769,7 +769,7 @@ mySaveMenuButton.onclick = function( ) {
 <br/>
 
 ### Server Side
-Client side option for cloud-save system can be problematic if you are not a experienced javascript programmer. You can perfectly let server do all work and just provide a final JSON object to the client through HTTP, but for this option MemoryCard-JS seems useless because you can perfectly use a *Database* such as *Firebase Firestore*, *MySQL* or any other service that can provide a object response through http.
+Client side option for cloud-save system can be problematic if you are not a experienced javascript programmer. You can perfectly let server do all work and just provide a final JSON object to the client through HTTP, but for this option memorycard.js seems useless because you can perfectly use a *Database* such as *Firebase Firestore*, *MySQL* or any other service that can provide a object response through http.
 
 So, if you prefer a full server-side system, I recommend you to search for a nice *Realtime Database* for your project.
 <br/><br/>

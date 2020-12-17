@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MemoriCard-JS Test</title>
+  <title>MemoryCard-JS Test</title>
 </head>
 <body>
   Starting MemoryCard-JS Test...
@@ -15,9 +15,12 @@
 
   // CONFIGURE PACKAGE BEFORE CALL ANY METHOD [v]
   MemoryCard.config( {
-    file  : './memorycard.data' ,
     slots : 8 ,
-    strict_mode : true
+    strict_mode : true ,
+    template : {
+      rupees : 0 ,
+      map : "home"
+    }
   } ) ;
 
   function write( str ) {

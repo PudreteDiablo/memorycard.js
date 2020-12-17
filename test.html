@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MemoriCard-JS Test</title>
+  <title>MemoryCard.js Test</title>
 </head>
 <body>
-  MemoryCard-JS Test.
+  MemoryCard.js Test.
 </body>
-<script src="./index.js"></script>
+<script src="./dist/memorycard.min.js"></script>
 <script>
   function write( str ) {
     document.getElementsByTagName( 'body' )[ 0 ].innerHTML += `<br/> ${ str }` ;
@@ -17,22 +17,22 @@
   let m = MemoryCard ;
 
   
-m.config( {
-  key : 'tacos' ,
-  temp : false ,
-  strict_mode : true ,
-  template : {
-    rupees : 0 ,
-    map : "home"
-  }
-} )
+  m.config( {
+    key : 'tacos' ,
+    temp : false ,
+    strict_mode : true ,
+    template : {
+      rupees : 0 ,
+      map : "home"
+    }
+  } )
 
 
-//m.format( 'tacos' ) ;
+  //m.format( 'tacos' ) ;
 
-//m.format( 'tacos' ) ;
+  //m.format( 'tacos' ) ;
 
-console.log( m.getAll( ) )
+  console.log( m.getAll( ) )
 
   //m.copy( 1, 2 )
 
