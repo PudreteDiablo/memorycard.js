@@ -16,12 +16,14 @@ Save user progress in javascript-based games with slots and objects.
   - [Self-Host/Download](#self-host--download)
 - [Advantages of Usage](#advantages)
 - [Available Platforms](#available-platforms)
+- [Examples](#examples)
 - [Documentation](#documentation)
   - [Reference Object](#reference-object)
     - [Node.js](#nodejs-backend-serverselectron)
     - [Global Object](#global-object-cordovabrowserselectron)
   - [Configuration](#configuration)
     - [Strict Mode](#strict-mode)
+    - [Card Keys](#card-keys)
   - [Methods](#methods)
     - [getSummary( )](#getsummary-)
     - [getAll( )](#getall-)
@@ -78,9 +80,14 @@ This tool was designed to be compatible with all useful javascript frameworks su
 | :--------------: | :----------: | :----------: | :------------: |
 | OS Drive         | LocalStorage | LocalStorage | Encrypted Data |
 
-If you want to save the data in a *cloud storage*, you can easily request the encrypted data instead of save it by installing memorycard-js in you server (safer) or in the client-side. Also you can use [Strict Mode](#strict-mode) and [Card Key](#card-key) to improve the security.
+If you want to save the data in a *cloud storage*, you can easily request the encrypted data instead of save it by installing memorycard-js in you server (safer) or in the client-side. Also you can use [Strict Mode](#strict-mode) and [Card Keys](#card-keys) to improve the security.
 
 **Electron Tip:** Don't forget to enable [nodeIntegration](https://www.electronjs.org/docs/tutorial/quick-start#create-the-main-script-file) or you will get a error saying something like: "require" is not a function.
+<br/>
+
+# Examples
+As programmer, I prefer to look at examples to understand how a package works. So I make a few examples with comments in the [examples folder](https://github.com/PudreteDiablo/memorycard-js/tree/master/examples).
+<br/>
 
 # Documentation
 
@@ -102,10 +109,10 @@ var mcard = window.MCARD ;
 MemoryCard.write( ) ;
 MCARD.load( ) ;
 ```
-<br/><br/>
+<br/>
 
 ## Configuration
-The configuration is optional, but helps you to have more control about your *MemoryCard* use flow. Once you have the reference of the *MemoryCard Object*, just call the **config( )** method to set your preferences. You will not able to change the configuration once the selected *MemoryCard* is loaded.
+The configuration is optional, but helps you to have more control about your *MemoryCard* use flow. Once you have the reference of the *MemoryCard Object*, just call the **config( )** method to set your preferences. You will not able to change the configuration once the selected *MemoryCard* is loaded or created, so if you create a *MemoryCard* with 4 slots and a [Card Key](#card-keys), you can't change that properties, just edit slots information to save user-progress.
 
 ```js
 MemoryCard.config( config_object ) ;
@@ -115,14 +122,23 @@ MemoryCard.config( config_object ) ;
 - `config_object` Object
   - `file` String - **Default:** `{EXECUTABLE_PATH}/memorycard.data` | Set the file where the slots and its data will be writed and saved.
   - `slots` Number - **Default: 4** | Number of slots that will be available in the *MemoryCard*.
-  - `key` String - **Default: null** | Increase security by requesting a key everytime that write( ) or save( ) function is called.
+  - `key` String - **Default: null** | Increase security by setting up a unique key for every new card created. See [Card Keys](#card-keys) for mor information.
   - `strict_mode` Boolean - **Default: false** | Set strict mode enabled. See [Strict Mode](#strict-mode) section for more information.
   - `template` Object - **Default: null** | Set a template for every new slot writed in the *MemoryCard*. When **strict_mode is disabled** all missing properties in the new slot will be replaced with the template properties as default. But if **strict_mode is enabled** all new slots must match with the template even the properties types to allow the save action.
   - `temp` Boolean - **Default: false** | **Recommended for cloud-based storage.** This option allows to create temporary *MemoryCard* files that will be deleted automatically by the OS or Browser by setting `/tmp/random-filename.data` in Node.js and switching **LocalStorage** to **SessionStorage** in Browsers.
   - `manual` Boolean - **Default: false** | Prevents user to save or load until you manually load a *MemoryCard* data through [setCardData( )](#setcarddata-)
 
 #### Why set a *slots* limit?
-It just helps to organize the data and avoids a huge *disk usage* (Web-LocalStorage only support 5MB per website). Also, a small number of slots can help to create a nice "save screen" for your game, just like many retro games. 
+It just helps to organize the data and avoids a huge *disk usage* (Web-LocalStorage only support 5MB per website). Also, a small number of slots can help to create a nice "save screen" for your game, just like many retro games.
+
+#### Card Keys
+Every time you create a *MemoryCard* (Automatically created when the package doesn't find the specified file or a record in the LocalStorage), the package will set the [pre-configured key](#configuration) as *MemoryCard* key and **will be locked** (not-changable).
+
+*Tip:* Create a unique key based on the user-id (recommended) or also by requesting a unique device-id with tools like [machine-id npm package](https://www.npmjs.com/package/machine-id).
+
+This feature have two objectives:
+- Increase write secutiry by requesting the *card key* every time when [write( )](#write-) or [save( )](#save-) methods being called.
+- Avoid a *progress-hack* by replacing the actual *MemoryCard* file with someone downloaded in a forum. Go to [examples](#examples) section to get a example about *Cards Keys* implementation.
 
 #### Strict Mode
 The strict mode helps you to keep your saved slots as clean as possible, so it will add missing properties, delete extra-defined properties and fixing the types. This mode can be useful to avoid corrupted data slots, but also could be dangerous, so just try to be careful.
@@ -230,7 +246,10 @@ var slots = MemoryCard.getSummary( ) ;
       title : "Slot 3"
     } ] ;
 ```
-<br/>
+
+#### Returns
+- `slots[]` Array | An array with slots descriptions **without its data**.
+<br/><br/>
 
 
 ### getAll( )
@@ -253,7 +272,10 @@ var slots = MemoryCard.getAll( ) ;
       data  : null
     } ]
 ```
-<br/>
+
+#### Returns
+- `slots[]` Array | An array with slots descriptions **including its data**.
+<br/><br/>
 
 
 ### getSlot( )
@@ -274,6 +296,9 @@ var slot = MemoryCard.getSlot( 0 ) ;
 
 #### Parameters
 - `slot_index` Number - **(Required)** The index of the requested slot. Must be less than the pre-configured number of slots (4 slots by default).
+
+#### Returns
+- `slot` Object | All information of the specified slot even if is empty.
 <br/><br/>
 
 
@@ -318,12 +343,15 @@ MemoryCard.save( 2, {
 <br/><br/>
 
 ### load( )
-Read and return the data of the specified slot_index. This method will return an error if the selected slot is empty.
+Read and return the data of the specified slot_index. This method will return `null` if the selected slot is empty.
 
 ```js
 // MemoryCard.load( slot_index ) ;
 MemoryCard.load( 2 ) ;
 ```
+
+#### Returns
+- `slot_data` Object | The data saved in the selected slot.
 
 #### Parameters
 - `slot_index` Number | **(Required)** Declare the slot where the data will loaded.
@@ -335,7 +363,13 @@ Read directly from *MemoryCard* file and returns all data on the file as JSON Ob
 ```js
 slots = MemoryCard.read( ) ;
 ```
-<br/>
+
+#### Returns
+- `memoryCard_data` Object | All decrypted information of the MemoryCard like the saved slots and the its key to modified it. Read [Card Keys](#card-keys) for more information.
+  - `key` String/Null | The key saved in the *MemoryCard* in its creation date.
+  - `date` String | The date of *MemoryCard* creation (ISO Format).
+  - `slots` Object[] | All slots (even empty slots) in the *MemoryCard*.
+<br/><br/>
 
 
 ### copy( )

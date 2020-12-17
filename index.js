@@ -21,7 +21,7 @@ var MCARD      = {
 MCARD.__config = {
   slots   : 4 , 
   file    : './memorycard.data' ,
-  storage : isElectron( ) === true ? { } : window.localStorage ,
+  storage : isNodejs( ) || isElectron( ) ? { } : window.localStorage ,
   key     : null ,
   temp    : false ,
   manual  : false
@@ -146,39 +146,75 @@ MCARD.getSlot = ( index ) => {
   var $s = MCARD.__config.slots || 4 ;
   if( index >= $s ) 
     { throw new Error( 'The defined index number is invalid. Must be less than the pre-configured MemoryCard.slots (' + $s + ')' ) ; }
-  var i = index ; index = `slot-${ i }` ;
-  if( MCARD.__cache[ index ] ) { return MCARD.__cache[ index ] ; }
-  expiresDate = expiresDate.toUTCString( ) ;
+  if( MCARD.__cache.slots[ index ] ) 
+    { return MCARD.__cache.slots[ index ] ; }
+  MCARD.read( ) ;
+  var slot = MCARD.__cache.slots[ index ] || {
+    index : index ,
+    empty : true ,
+    title : `Slot ${ index + 1 }`
+  } ;
+  // FINALLY RETURN SLOT [v]
+  return slot ;
 }
 
 /**
- * Reads directly from MemoryCard file. Not recommended, could affect to game performance if you use it frecuently.
+ * Reads directly from MemoryCard file and return all card data. Not recommended, could affect to game performance if you use it frecuently.
  *
- * @return {Object} - all decrypted data of the file (slots).
+ * @return {Object} - all decrypted data of the file (creation_date, key and slots).
  */
 MCARD.read = ( ) => {
-  var data   = [ ] ;
+  var data   = { } ;
   var length = MCARD.__config.slots || 4 ;
   var file   = MCARD.__config.file || './memorycard.data' ;
-  if( isElectron( ) ) {
+  var create = ( ) => {
+    // CREATE NEW MEMORY WITH DEFINED CONFIG [v]
+    var $m = { 
+      key   : MCARD.__config.key || null ,
+      date  : ( new Date( ) ).toISOString( ) ,
+      slots : [ ]
+    } ; 
+    for( var i = 0 ; i < length ; i++ ) {
+      $m.slots.push( {
+        index : i ,
+        empty : true ,
+        title : `Slot ${ i + 1 }`
+      } ) ;
+    } return $m ;
+  } ;
+  if( isNodejs( ) || isElectron( ) ) {
     if( fs.existsSync( file ) ) {
       var raw = fs.readFileSync( file, 'utf8' ) ;
       var str ;
       try { str = cryptr.decrypt( raw ) ; }
       catch( ex ) { throw new Error( 'Couldn\'t decrypt MemoryCard file. ' + ex.toString( ) ) ; }  
       data = JSON.parse( str ) ;
-    } /* READ FILE IN DRIVE [^] */
-  } else {
-    for( var i = 0 ; i < length ; i++ ) {
-      let $sl = MCARD.__config.slots.storage.getItem( `memorycard-slot-${ i + 1 }` ) ,
-          str = !$sl ? null : typeof $sl === "string" && typeof window.btoa === "function" ? btoa( $sl ) : $sl ,
-          obj = str === null ? null : JSON.parse( str ) ;
-      data.push( obj ) ;
+    } else {
+      data = create( ) ;
+      var encoded ;
+      try { encoded = cryptr.encrypt( JSON.stringify( data ) ) ; }
+      catch( ex ) { throw new Error( 'Couldn\'t encrypt MemoryCard file. ' + ex.toString( ) ) ; }  
+      fs.writeFileSync( file, encoded ) ;
     }
+  } else {
+    var raw = MCARD.__config.storage.getItem( 'virtualMemoryCard_data' ) ;
+    if( raw ) {
+      var str = atob( raw ) ;
+      try { data = JSON.parse( str ) ; }
+      catch( ex ) { throw new Error( 'Couldn\'t decrypt MemoryCard file. ' + ex.toString( ) ) ; }    
+    } else {
+      data = create( ) ;
+      var str = btoa( JSON.stringify( data ) ) ;
+      MCARD.__config.storage.setItem( 'virtualMemoryCard_data', str ) ;
+    }     
   } /* clean */
-  for( var i = 0 ; i < length ; i++ ) {
+  for( var i = 0 ; i < data.length ; i++ ) {
     if( !data[ i ] ) {
-
+      data[ i ] = {
+        index : i ,
+        empty : true ,
+        title : `Slot ${ i + 1 }`
+      } ;
     }
   } /* ===== */
   return data ;
@@ -210,11 +246,6 @@ MCARD.write = ( slot, title, data, key ) => {
   if( typeof data  !== "object" ) { throw new Error( 'No data defined to save. Please set a object to write the data_slot in the memorycard.' ) ; }
   
 } ;
-
-MCARD.read = ( ) => {
-
-} ;
-
 
 
 /* FUNCTIONS [v] */

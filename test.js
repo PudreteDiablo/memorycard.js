@@ -1,3 +1,3 @@
 const MEMORY = require( './index.js' ) ;
 
-MEMORY.getSl
+console.log( MEMORY.read( ) )

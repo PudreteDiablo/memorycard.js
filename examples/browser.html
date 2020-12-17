@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MemoriCard-JS Test</title>
+</head>
+<body>
+  Starting MemoryCard-JS Test...
+</body>
+<script src="../dist/memorycard.js"></script>
+<script>
+  // You can access directly to MemoryCard object once you have imported the package.
+  // Also available as "MCARD" => MCARD.load( ), MCARD.write( ), etc...
+
+  // CONFIGURE PACKAGE BEFORE CALL ANY METHOD [v]
+  MemoryCard.config( {
+    file  : './memorycard.data' ,
+    slots : 8 ,
+    strict_mode : true
+  } ) ;
+
+  function write( str ) {
+    document.getElementsByTagName( 'body' )[ 0 ].innerHTML += `<br/> ${ str }` ;
+  }
+
+  // DEFINE EVENTS FIRST (Recommended) [v]
+  MemoryCard.on( 'load', ( ev ) => {
+    write( 'EVENT: New MemoryCard-Slot loaded: <br/>' + JSON.stringify( ev.slot_data, null, 2 ) ) ;
+  } ) ;
+
+  MemoryCard.on( 'save', ( ev ) => {
+    write( `EVENT: Slot ${ ev.slot_index + 1 } has saved: <br/>` + JSON.stringify( ev.slot_data, null, 2 ) ) ;
+  } ) ;
+
+  // READY TO CALL METHODS [v]
+  function saveGame( data ) {
+    // Save in slot 1 - slot_index = 0 [v]
+    MemoryCard.save( 0, 'My Title for Slots Summary', data ) ;
+    // Once saved, return true ;
+    return true ;
+  }
+
+  function loadGame( ) {
+    // Load slot 1 ;
+    // If doesn't exists, it will return NULL.
+    return MemoryCard.load( 0 ) ;
+  }
+
+  // =========================
+  // TESTING SAVE AND LOAD [v]
+  saveGame( { rupees : 8 } ) ;
+  write( 'Game Data saved without errors, continue with script...' ) ;
+  var slotData = loadGame( ) ;
+  write( 'Game Loaded!' ) ;
+</script>
+</html>
