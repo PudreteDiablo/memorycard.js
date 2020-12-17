@@ -14,11 +14,29 @@
     document.getElementsByTagName( 'body' )[ 0 ].innerHTML += `<br/> ${ str }` ;
   }
 
-  MemoryCard.config( {
-    key : 'tacos' ,
-    temp : false
-  } )
+  let m = MemoryCard ;
 
-  console.log( MemoryCard.read( ) )
+  
+m.config( {
+  key : 'tacos' ,
+  temp : false ,
+  strict_mode : true ,
+  template : {
+    rupees : 0 ,
+    map : "home"
+  }
+} )
+
+
+//m.format( 'tacos' ) ;
+
+//m.format( 'tacos' ) ;
+
+console.log( m.getAll( ) )
+
+  //m.copy( 1, 2 )
+
+  //console.log( m.getAll( ) )
+
 </script>
 </html>

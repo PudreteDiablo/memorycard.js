@@ -25,7 +25,8 @@
   },
   "homepage": "https://github.com/PudreteDiablo/memorycard-js#readme",
   "dependencies": {
+    "atob": "^2.1.2",
     "axios": "^0.21.0",
-    "cryptr": "^6.0.2"
+    "btoa": "^1.2.1"
   }
 }

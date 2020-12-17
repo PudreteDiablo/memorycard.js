@@ -10,8 +10,12 @@ m.config( {
   }
 } )
 
-m.save( 1, {
-  rupees : 2
-} ,'tacos' )
+
+m.write( 1, "My Awesome Title", {
+  rupees : "8" ,
+  map : true
+} , 'tacos' ) ;
+
+//m.format( 'tacos' ) ;
 
 console.log( m.getAll( ) )

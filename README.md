@@ -130,19 +130,19 @@ MemoryCard.config( config_object ) ;
   - `strict_mode` Boolean - **Default: false** | Set strict mode enabled. See [Strict Mode](#strict-mode) section for more information.
   - `template` Object - **Default: null** | Set a template for every new slot writed in the *MemoryCard*. When **strict_mode is disabled** all missing properties in the new slot will be replaced with the template properties as default. But if **strict_mode is enabled** all new slots must match with the template even the properties types to allow the save action.
   - `temp` Boolean - **Default: false** | **Recommended for cloud-based storage.** This option allows to create temporary *MemoryCard* files that will be deleted automatically by the OS or Browser by setting `/tmp/random-filename.data` in Node.js and switching **LocalStorage** to **SessionStorage** in Browsers.
-  - `manual` Boolean - **Default: false** | Prevents user to save or load until you manually load a *MemoryCard* data through [setCardData( )](#setcarddata-)
 
 #### Why set a *slots* limit?
 It just helps to organize the data and avoids a huge *disk usage* (Web-LocalStorage only support 5MB per website). Also, a small number of slots can help to create a nice "save screen" for your game, just like many retro games.
 
 #### Card Keys
-Every time you create a *MemoryCard* (Automatically created when the package doesn't find the specified file or a record in the LocalStorage), the package will set the [pre-configured key](#configuration) as *MemoryCard* key and **will be locked** (not-changable).
+Every time you create a *MemoryCard* (Automatically created when the package doesn't find the specified file or a record in the LocalStorage), the package will set the [pre-configured key](#configuration) as *MemoryCard* encryption-key and **will be locked** (not-changable).
 
-*Tip:* Create a unique key based on the user-id (recommended) or also by requesting a unique device-id with tools like [machine-id npm package](https://www.npmjs.com/package/machine-id).
+*Tip:* Create a unique key based on the user-id (recommended) or also by requesting a unique device-id with tools like [machine-id npm package](https://www.npmjs.com/package/machine-id). Also you can create a unique key for
 
 This feature have two objectives:
-- Increase write secutiry by requesting the *card key* every time when [write( )](#write-) or [save( )](#save-) methods being called.
+- Increase write secutiry by requesting the *card key* every time the game starts and load the *MemoryCard* to get user-progress.
 - Avoid a *progress-hack* by replacing the actual *MemoryCard* file with someone downloaded in a forum. Go to [examples](#examples) section to get a example about *Cards Keys* implementation.
+
 
 #### Strict Mode
 The strict mode helps you to keep your saved slots as clean as possible, so it will add missing properties, delete extra-defined properties and fixing the types. This mode can be useful to avoid corrupted data slots, but also could be dangerous, so just try to be careful.
@@ -312,7 +312,7 @@ var slot = MemoryCard.getSlot( 0 ) ;
 Writes the data in a slot of the *MemoryCard*. This method will overwrite the entire slot if is already in use. If you only want to save a little change like new "coins" amount, you maybe want to use [save( )](#save) method instead.
 
 ```js
-// MemoryCard.write( slot_index, ?title, data, ?key ) ;
+// MemoryCard.write( slot_index, ?title, data ) ;
 MemoryCard.write( 2, "Cookies Island", {
  username : "Diablo Luna"
  scene : 3 ,
@@ -320,14 +320,13 @@ MemoryCard.write( 2, "Cookies Island", {
    watermelons : 8 ,
    lemon_pie : true
  }
-} , false, "XMJSKO92" ) ;
+} ) ;
 ```
 
 #### Parameters
 - `slot_index` Number | **(Required)** Declare the slot where the data will be saved.
 - `title` String | **(Optional) Default: "Slot N" where N = slot_index + 1.** Set a title to display in the slots summary.
 - `data` Object | **(Required)** All data to save in the slot. If you have enabled **Strict Mode**, the data object will be processed before save it in the storage. See [Strict Mode](#strict-mode) for more information.
-- `key` String | **(Optional)** Set the required key to save the new data in the slot, only if you have declared it before in the [configuration](#configuration).
 <br/><br/>
 
 ### save( )
@@ -336,17 +335,16 @@ With this method you can save one or more properties in an already saved slot. I
 Unlike [write( )](#write-), when you are in **strict mode**, only the defined properties in the parameters will be processed and fixed to save in the slot. 
 
 ```js
-// MemoryCard.save( slot_index, ?title, data, ?key ) ;
+// MemoryCard.save( slot_index, ?title, data ) ;
 MemoryCard.save( 2, {
  rupees : 32
-} , "XMJSKO92" ) ;
+} ) ;
 ```
 
 #### Parameters
 - `slot_index` Number | **(Required)** Declare the slot where the data will be saved.
 - `title` String | **(Optional) Default: The current slot_title.** Set a title to display in the slots summary.
 - `data` Object | **(Required)** The data to overwrite in the slot.
-- `key` String | **(Optional)** Set the required key to save the new data in the slot, only if you have declared it before in the [configuration](#configuration).
 <br/><br/>
 
 ### load( )
@@ -373,18 +371,18 @@ slots = MemoryCard.read( ) ;
 
 #### Returns
 - `memoryCard_data` Object | All decrypted information of the MemoryCard like the saved slots and the its key to modified it. Read [Card Keys](#card-keys) for more information.
-  - `key` String/Null | The key saved in the *MemoryCard* in its creation date.
+  - `key` String/Null | The key saved in the *MemoryCard*.
   - `date` String | The date of *MemoryCard* creation (ISO Format).
   - `slots` Object[] | All slots (even empty slots) in the *MemoryCard*.
 <br/><br/>
 
 
 ### copy( )
-Copy a already used slot to create new one.
+Copy an already used slot to create new one.
 
 ```js
 // MemoryCard.copy( ref_index, dest_index ) ;
-MemoryCard.load( 0, 2 ) ;
+MemoryCard.copy( 0, 2 ) ;
 // Slot 1 will be copied in Slot 3 [^]
 ```
 
@@ -420,7 +418,7 @@ MemoryCard.format( ) ;
 
 
 ### reset( )
-Do you prefer to delete entire *MemoryCard* even the file or record in the LocalStorage to create new one?. This method will delete entire data.
+Do you prefer to delete entire *MemoryCard* even the file or record in the LocalStorage to create new one?. This method will delete entire data and file.
 
 ```js
 MemoryCard.reset( ) ;
@@ -434,13 +432,13 @@ An async option of [write( )](#write-]).
 **NOTE:** All async versions of the available methods are helpful to catch errors and will always returns [Promises](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise). Also all of it uses the same parameters of it "original" versions.
 
 ```js
-MemoryCard.writeAsync( slot_index, title, data, ?key ) ;
+MemoryCard.writeAsync( slot_index, title, data ) ;
 ```
 
 ### saveAsync( )
 
 ```js
-MemoryCard.saveAsync( slot_index, data, ?key ) ;
+MemoryCard.saveAsync( slot_index, data ) ;
 ```
 
 
@@ -520,6 +518,8 @@ MemoryCard.getCardData( ) ;
 
 ### setCardData( )
 Set custom encrypted *MemoryCard* data to load slots and *user-progress*. You can use this method to load a *MemoryCard* backup or data requested from a cloud-storage.
+
+**Note:** The new data will replace the content of the current *MemoryCard* file (if the content is valid), then [read( )](#read-) will be executed automatically to read new content in the file or LocalStorage.
 
 If you will use a full "cloud-save-system", **I recommend to enable the `temp` option in the [MemoryCard Configuration](#configuration).** This will allow to delete automatically the *MemoryCard* files by setting `/tmp` folder as *MemoryCard* file or switching LocalStorage to SessionStorage if you will use a Browser instead Node.js as platform.
 
@@ -622,6 +622,13 @@ Returns:
   - `card_data` Object | The full loaded data of the new inserted card as returned in [read( )](#read-). 
 <br/><br/>
 
+### Event: `format`
+Fired when the [format( )](#format-) method has been executed correctly.
+
+Returns:
+- `EventData` Object
+  - `card_data` Object | The full of the new inserted card as returned in [read( )](#read-). 
+<br/><br/>
 
 ## Properties
 Properties of the *MemoryCard* Object. I think are useless (except for the first one, because I used it to develop the methods) but... here it is.
