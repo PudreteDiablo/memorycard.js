@@ -657,7 +657,7 @@ Of course, you can save all changes every time the player changes the scene, but
 <br/><br/>
 
 ## Security Practices
-Some times the MemoryCard security will not be a problem, because you maybe don't have problem if your players exchange *MemoryCard* files to advance in your game that only have 1-Player support and doesn't have a online-multiplayer option.
+Some times the MemoryCard security will not be a problem, because you maybe don't have problem if your players exchange *MemoryCard* files to advance in your game that only have 1-Player support and doesn't have an online-multiplayer option.
 
 But, if you game needs to protect the *MemoryCard* from the hackers and cheaters, just follow the next recommendations:
 - Use a unique [Card Key](#card-keys) per player. You can easily make one with their IDs even create a special key in your Database for every new player in your game.
